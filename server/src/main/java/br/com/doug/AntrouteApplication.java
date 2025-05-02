@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class AntrouteApplication {
 
-	public static void main(String[] args) {
+	public static void initServer(String[] args) {
 		SpringApplication.run(AntrouteApplication.class, args);
 	}
 
