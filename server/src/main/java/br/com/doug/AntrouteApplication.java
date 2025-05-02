@@ -1,4 +1,4 @@
-package br.com.doug.antroute;
+package br.com.doug;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

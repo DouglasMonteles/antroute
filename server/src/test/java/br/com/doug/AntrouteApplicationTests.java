@@ -1,4 +1,4 @@
-package br.com.doug.antroute;
+package br.com.doug;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

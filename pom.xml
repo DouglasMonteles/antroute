@@ -11,7 +11,8 @@
 	<groupId>br.com.doug</groupId>
 	<artifactId>antroute</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>antroute</name>
+    <packaging>pom</packaging>
+    <name>antroute</name>
 	<description>Project that applies the Ant Algorithm with a multi-agent systems paradigm and uses the Spring Boot ecosystem</description>
 	<url/>
 	<licenses>
@@ -20,7 +21,11 @@
 	<developers>
 		<developer/>
 	</developers>
-	<scm>
+    <modules>
+        <module>agents</module>
+		<module>server</module>
+	</modules>
+    <scm>
 		<connection/>
 		<developerConnection/>
 		<tag/>
@@ -30,19 +35,6 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-validation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
