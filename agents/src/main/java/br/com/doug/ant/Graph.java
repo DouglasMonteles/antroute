@@ -3,41 +3,57 @@ package br.com.doug.ant;
 import lombok.Data;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 public class Graph {
 
-    private final Map<Node, List<Node>> graph = new HashMap<>();
+    private final List<Edge> edges = Collections.synchronizedList(new ArrayList<>());
 
     /*
     * Bidirectional graph
     * */
     public void addEdge(Node startNode, Node finalNode) {
+        Edge edge = new Edge();
+
+        // Set initial and final node
+        edge.setNodeA(startNode);
+        edge.setNodeB(finalNode);
+
         // Calc euclidian distance between the nodes and set the value in both nodes distance attribute
         float distance = calcEuclideanDistanceBetweenTwoConnectedNodes(startNode, finalNode);
-        startNode.setDistance(distance);
-        finalNode.setDistance(distance);
+        edge.setDistance(distance);
 
-        this.graph.putIfAbsent(startNode, Collections.synchronizedList(new ArrayList<>()));
-        this.graph.get(startNode).add(finalNode);
+        // Set default trail intensity for every edge(i,j)
+        float trailIntensity = 0f;
+        edge.setTrailIntensity(trailIntensity);
 
-        this.graph.putIfAbsent(finalNode, Collections.synchronizedList(new ArrayList<>()));
-        this.graph.get(finalNode).add(startNode);
+        this.edges.add(edge);
     }
 
     public Set<Node> getNodes() {
-        return graph.keySet();
+        Set<Node> nodes = new HashSet<>();
+
+        for (Edge edge : edges) {
+            nodes.add(edge.getNodeA());
+            nodes.add(edge.getNodeB());
+        }
+
+        return nodes;
     }
 
     public List<Node> getEdges(Node node) {
-        return graph.get(node);
-    }
+        List<Node> nodes = new ArrayList<>();
 
-    public void printGraph() {
-        graph.forEach((node, edges) -> {
-            String edgesNames = edges.stream().map(Node::getName).toList().toString();
-            System.out.println(node.getName() + " -> " + edgesNames);
-        });
+        for (Edge edge : edges) {
+            if (edge.getNodeA().equals(node)) {
+                nodes.add(edge.getNodeB());
+            } else if (edge.getNodeB().equals(node)) {
+                nodes.add(edge.getNodeA());
+            }
+        }
+
+        return nodes;
     }
 
     private float calcEuclideanDistanceBetweenTwoConnectedNodes(Node startNode, Node finalNode) {

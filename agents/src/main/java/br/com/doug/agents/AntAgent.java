@@ -1,10 +1,12 @@
 package br.com.doug.agents;
 
 import jade.core.Agent;
-import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.CyclicBehaviour;
+import jade.core.Node;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 * Each ant is a simple agent with the following characteristics:
@@ -16,6 +18,8 @@ import jade.core.behaviours.SimpleBehaviour;
 * */
 public class AntAgent extends Agent {
 
+    private final List<Node> tabuList = new ArrayList<>();
+
     @Override
     protected void setup() {
 
@@ -25,6 +29,11 @@ public class AntAgent extends Agent {
         antMoveCharacteristics.addSubBehaviour(new UpdateTabuList());
 
         addBehaviour(antMoveCharacteristics);
+    }
+
+    @Override
+    protected void takeDown() {
+        tabuList.clear();
     }
 
     /*

@@ -2,6 +2,7 @@ package br.com.doug.ant;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class Node {
 
     private String name;
-    private Float distance;
     private Position position;
 
     @Data
