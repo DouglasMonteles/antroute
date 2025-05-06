@@ -13,6 +13,7 @@ public class Graph {
     * Bidirectional graph
     * */
     public void addEdge(Node startNode, Node finalNode) {
+        // Calc euclidian distance between the nodes and set the value in both nodes distance attribute
         float distance = calcEuclideanDistanceBetweenTwoConnectedNodes(startNode, finalNode);
         startNode.setDistance(distance);
         finalNode.setDistance(distance);

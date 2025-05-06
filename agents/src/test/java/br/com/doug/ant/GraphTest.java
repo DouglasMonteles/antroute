@@ -59,4 +59,21 @@ public class GraphTest {
         System.setOut(System.out);
     }
 
+    @Test
+    public void calcDistanceBetweenTwoNodesWhenAddEdgeInTheGraph() {
+        Graph graph = new Graph();
+        Node nodeA = new Node("A", null, new Node.Position(10f, 10f));
+        Node nodeB = new Node("B", null, new Node.Position(20f, 20f));
+
+        graph.addEdge(nodeA, nodeB);
+
+        // Euclidian distance expected
+        double expectedDistance = 14.14d;
+        double delta = 0.01d;
+
+        graph.getNodes().forEach(node -> {
+            Assert.assertEquals(expectedDistance, node.getDistance().doubleValue(), delta);
+        });
+    }
+
 }
