@@ -6,6 +6,12 @@ import lombok.Data;
 public class AntDensityAlgorithm implements AntAlgorithm {
 
     /*
+    * In the Ant-density model a quantity Q 1 of trail for every unit of length is left on edge (i,j)
+    * every time an ant goes from i to j;
+    * */
+    public static Float Q1 = 100f;
+
+    /*
     * timeCounter (interactions)
     * */
     private Integer t = 0;
@@ -42,6 +48,10 @@ public class AntDensityAlgorithm implements AntAlgorithm {
         graph.addEdge(nodeF, nodeD);
 
         graph.getNodes().forEach(__ -> ant1.move(graph));
+
+        graph.computeEvaporationOfTrail();
+
+        System.out.println(graph);
     }
 
 

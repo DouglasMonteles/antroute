@@ -37,15 +37,16 @@ public class Ant {
                 .toList();
 
         if (!moveNodes.isEmpty()) {
-//            Random random = new Random();
-//            int index = random.nextInt(moveNodes.size());
-
-            // TODO: calc next node (town) with equation (2)
             Node nextNode = this.getNodeWithMaxProbabilityToMove(moveNodes, graph);
             this.nextNode = nextNode;
-
             this.addNodeToTabuList(nextNode);
+
+            // Update pheromone on edge
+            graph.incrementPheromoneOnEdge(actualNode, nextNode, AntDensityAlgorithm.Q1);
+
+            // Move to select next node
             this.actualNode = nextNode;
+
             System.out.println("Ant: " + this.label + " -> Next node: " + nextNode.getName());
         }
     }

@@ -38,6 +38,26 @@ public class Graph {
         this.edges.add(edge);
     }
 
+    public void incrementPheromoneOnEdge(Node actualNode, Node nextNode, Float pheromone) {
+        for (var edge : getEdges()) {
+            if (edge.getNodeA().equals(actualNode) && edge.getNodeB().equals(nextNode)) {
+                edge.incrementPheromone(AntDensityAlgorithm.Q1);
+                break;
+            }
+        }
+    }
+
+    public void computeEvaporationOfTrail() {
+        // For every edge (i,j) compute τ ij(t+1) according to equation (1)
+        for (var edge : getEdges()) {
+            var intensity = edge.getIntensityOfTrail();
+            var pheromone = edge.getPheromoneOnEdge();
+            var intensityOfTrailUpdated = (AntAlgorithm.RHO * intensity) + pheromone;
+
+            edge.setIntensityOfTrail(intensityOfTrailUpdated);
+        }
+    }
+
     private void calcDefaultParamsForEdge(Edge edge) {
         // Calc euclidian distance between the nodes and set the value in both nodes distance attribute
         float distance = calcEuclideanDistanceBetweenTwoConnectedNodes(edge.getNodeA(), edge.getNodeB());
