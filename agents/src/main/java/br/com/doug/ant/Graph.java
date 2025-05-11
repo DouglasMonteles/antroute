@@ -14,13 +14,33 @@ public class Graph {
     * */
     public void addEdge(Node startNode, Node finalNode) {
         Edge edge = new Edge();
+        edge.setBidirectional(false);
 
         // Set initial and final node
         edge.setNodeA(startNode);
         edge.setNodeB(finalNode);
 
+        this.calcDefaultParamsForEdge(edge);
+
+        this.edges.add(edge);
+    }
+
+    public void addEdge(Node startNode, Node finalNode, boolean isBidirectional) {
+        Edge edge = new Edge();
+        edge.setBidirectional(isBidirectional);
+
+        // Set initial and final node
+        edge.setNodeA(startNode);
+        edge.setNodeB(finalNode);
+
+        this.calcDefaultParamsForEdge(edge);
+
+        this.edges.add(edge);
+    }
+
+    private void calcDefaultParamsForEdge(Edge edge) {
         // Calc euclidian distance between the nodes and set the value in both nodes distance attribute
-        float distance = calcEuclideanDistanceBetweenTwoConnectedNodes(startNode, finalNode);
+        float distance = calcEuclideanDistanceBetweenTwoConnectedNodes(edge.getNodeA(), edge.getNodeB());
         edge.setDistance(distance);
 
         // Calc visibility: probability from town i to town j for the k-th ant
@@ -34,8 +54,6 @@ public class Graph {
         // Set default total pheromone for every edge(i,j)
         float pheromoneOnEdge = 0f;
         edge.setPheromoneOnEdge(pheromoneOnEdge);
-
-        this.edges.add(edge);
     }
 
     public Set<Node> getNodes() {
@@ -53,10 +71,16 @@ public class Graph {
         List<Node> nodes = new ArrayList<>();
 
         for (Edge edge : edges) {
-            if (edge.getNodeA().equals(node)) {
-                nodes.add(edge.getNodeB());
-            } else if (edge.getNodeB().equals(node)) {
-                nodes.add(edge.getNodeA());
+            if (edge.isBidirectional()) {
+                if (edge.getNodeA().equals(node)) {
+                    nodes.add(edge.getNodeB());
+                } else if (edge.getNodeB().equals(node)) {
+                    nodes.add(edge.getNodeA());
+                }
+            } else {
+                if (edge.getNodeA().equals(node)) {
+                    nodes.add(edge.getNodeB());
+                }
             }
         }
 

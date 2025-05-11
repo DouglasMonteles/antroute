@@ -21,17 +21,27 @@ public class AntDensityAlgorithm implements AntAlgorithm {
         Node nodeF = new Node("F", new Node.Position(10f, 10f));
 
         Ant ant1 = new Ant("AntA", nodeA);
-        Ant ant2 = new Ant("AntB", nodeA);
 
         graph.addEdge(nodeA, nodeB);
-        graph.addEdge(nodeB, nodeC);
-        graph.addEdge(nodeC, nodeA);
-        graph.addEdge(nodeD, nodeA);
-        graph.addEdge(nodeF, nodeB);
-        graph.addEdge(nodeB, nodeE);
-        graph.addEdge(nodeD, nodeE);
+        graph.addEdge(nodeA, nodeC);
+        graph.addEdge(nodeA, nodeF);
 
-        graph.getNodes().forEach(it -> ant1.move(graph));
+        graph.addEdge(nodeB, nodeD);
+        graph.addEdge(nodeB, nodeE);
+
+        graph.addEdge(nodeC, nodeB);
+        graph.addEdge(nodeC, nodeF);
+
+        graph.addEdge(nodeD, nodeC);
+        graph.addEdge(nodeD, nodeA);
+
+        graph.addEdge(nodeE, nodeD);
+        graph.addEdge(nodeE, nodeF);
+
+        graph.addEdge(nodeF, nodeB);
+        graph.addEdge(nodeF, nodeD);
+
+        graph.getNodes().forEach(__ -> ant1.move(graph));
     }
 
 

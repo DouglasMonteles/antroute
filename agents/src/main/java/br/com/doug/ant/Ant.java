@@ -64,25 +64,40 @@ public class Ant {
 
         for (Node node : nodes) {
             for (Edge edge : graph.getEdges()) {
-                if (edge.getNodeA().equals(node) || edge.getNodeB().equals(node)) {
-                    double numerator = (Math.pow(edge.getIntensityOfTrail(), AntAlgorithm.ALPHA) * Math.pow(edge.getVisibility(), AntAlgorithm.BETA));
-                    double denominator = 0f;
+                if (edge.isBidirectional()) {
+                    if (edge.getNodeA().equals(node) || edge.getNodeB().equals(node)) {
+                        double probability = this.calcProbability(graph, edge);
 
-                    for (Edge edge2 : graph.getEdges()) {
-                        denominator += (Math.pow(edge2.getIntensityOfTrail(), AntAlgorithm.ALPHA) * Math.pow(edge2.getVisibility(), AntAlgorithm.BETA));
+                        if (maxProbability < probability) {
+                            maxProbability = (float) probability;
+                            selectedNode = edge.getNodeB();
+                        }
                     }
+                } else {
+                    if (edge.getNodeA().equals(actualNode) && edge.getNodeB().equals(node)) {
+                        double probability = this.calcProbability(graph, edge);
 
-                    double probability = (denominator <= 0) ? 0d : (numerator / denominator);
-
-                    if (maxProbability < probability) {
-                        maxProbability = (float) probability;
-                        selectedNode = edge.getNodeB();
+                        if (maxProbability < probability) {
+                            maxProbability = (float) probability;
+                            selectedNode = edge.getNodeB();
+                        }
                     }
                 }
             }
         }
 
         return selectedNode;
+    }
+
+    private double calcProbability(Graph graph, Edge edge) {
+        double numerator = (Math.pow(edge.getIntensityOfTrail(), AntAlgorithm.ALPHA) * Math.pow(edge.getVisibility(), AntAlgorithm.BETA));
+        double denominator = 0f;
+
+        for (Edge edge2 : graph.getEdges()) {
+            denominator += (Math.pow(edge2.getIntensityOfTrail(), AntAlgorithm.ALPHA) * Math.pow(edge2.getVisibility(), AntAlgorithm.BETA));
+        }
+
+        return (denominator <= 0) ? 0d : (numerator / denominator);
     }
 
 }

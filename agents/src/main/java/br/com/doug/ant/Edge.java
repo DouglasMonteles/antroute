@@ -25,6 +25,6 @@ public class Edge {
     * */
     private Float pheromoneOnEdge = 0f;
 
-    private boolean isBidirectional = true;
+    private boolean isBidirectional = false;
 
 }
