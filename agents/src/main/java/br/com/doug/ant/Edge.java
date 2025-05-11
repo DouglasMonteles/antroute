@@ -12,7 +12,19 @@ public class Edge {
     private Node nodeA;
     private Node nodeB;
     private Float distance;
-    private Float trailIntensity = 0f;
+    private Float visibility;
+
+    /*
+    * Intensity of trail τ_ij(t)  on edge (i,j) at time t
+    * */
+    private Float intensityOfTrail = 0f;
+
+    /*
+    * ∆τ k ij(t,t+1) is the quantity per unit of length of trail substance (pheromone in real ants) laid on
+    * edge (i,j) by the k-th ant between time t and t+1.
+    * */
+    private Float pheromoneOnEdge = 0f;
+
     private boolean isBidirectional = true;
 
 }

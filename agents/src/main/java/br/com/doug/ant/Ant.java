@@ -1,0 +1,88 @@
+package br.com.doug.ant;
+
+import lombok.Data;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
+@Data
+public class Ant {
+
+    private String label;
+    private Node initialNode;
+    private Node actualNode;
+    private Node nextNode;
+
+    private final Set<Node> tabuList = new HashSet<>();
+
+    public Ant(String label, Node initialNode) {
+        this.label = label;
+        this.initialNode = initialNode;
+        this.actualNode = initialNode;
+        this.nextNode = null;
+
+        this.addNodeToTabuList(initialNode);
+    }
+
+    public void move(Graph graph) {
+        Node currentNode = this.nextNode == null ? this.initialNode : this.nextNode;
+
+        // Only node not in tabulist are available
+        List<Node> moveNodes = graph
+                .getEdges(currentNode)
+                .stream()
+                .filter(this::isNodeNotInTabuList)
+                .toList();
+
+        if (!moveNodes.isEmpty()) {
+//            Random random = new Random();
+//            int index = random.nextInt(moveNodes.size());
+
+            // TODO: calc next node (town) with equation (2)
+            Node nextNode = this.getNodeWithMaxProbabilityToMove(moveNodes, graph);
+            this.nextNode = nextNode;
+
+            this.addNodeToTabuList(nextNode);
+            this.actualNode = nextNode;
+            System.out.println("Ant: " + this.label + " -> Next node: " + nextNode.getName());
+        }
+    }
+
+    private boolean isNodeNotInTabuList(Node node) {
+        return !this.tabuList.contains(node);
+    }
+
+    private void addNodeToTabuList(Node node) {
+        this.tabuList.add(node);
+    }
+
+    private Node getNodeWithMaxProbabilityToMove(List<Node> nodes, Graph graph) {
+        float maxProbability = Float.MIN_VALUE;
+        Node selectedNode = nodes.get(0);
+
+        for (Node node : nodes) {
+            for (Edge edge : graph.getEdges()) {
+                if (edge.getNodeA().equals(node) || edge.getNodeB().equals(node)) {
+                    double numerator = (Math.pow(edge.getIntensityOfTrail(), AntAlgorithm.ALPHA) * Math.pow(edge.getVisibility(), AntAlgorithm.BETA));
+                    double denominator = 0f;
+
+                    for (Edge edge2 : graph.getEdges()) {
+                        denominator += (Math.pow(edge2.getIntensityOfTrail(), AntAlgorithm.ALPHA) * Math.pow(edge2.getVisibility(), AntAlgorithm.BETA));
+                    }
+
+                    double probability = (denominator <= 0) ? 0d : (numerator / denominator);
+
+                    if (maxProbability < probability) {
+                        maxProbability = (float) probability;
+                        selectedNode = edge.getNodeB();
+                    }
+                }
+            }
+        }
+
+        return selectedNode;
+    }
+
+}

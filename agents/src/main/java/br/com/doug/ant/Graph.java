@@ -3,12 +3,11 @@ package br.com.doug.ant;
 import lombok.Data;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Data
 public class Graph {
 
-    private final List<Edge> edges = Collections.synchronizedList(new ArrayList<>());
+    private final Set<Edge> edges = Collections.synchronizedSet(new HashSet<>());
 
     /*
     * Bidirectional graph
@@ -24,9 +23,17 @@ public class Graph {
         float distance = calcEuclideanDistanceBetweenTwoConnectedNodes(startNode, finalNode);
         edge.setDistance(distance);
 
+        // Calc visibility: probability from town i to town j for the k-th ant
+        float visibility = calcVisibilityBetweenToNodes(edge);
+        edge.setVisibility(visibility);
+
         // Set default trail intensity for every edge(i,j)
-        float trailIntensity = 0f;
-        edge.setTrailIntensity(trailIntensity);
+        float intensityOfTrail = 0f;
+        edge.setIntensityOfTrail(intensityOfTrail);
+
+        // Set default total pheromone for every edge(i,j)
+        float pheromoneOnEdge = 0f;
+        edge.setPheromoneOnEdge(pheromoneOnEdge);
 
         this.edges.add(edge);
     }
@@ -67,6 +74,16 @@ public class Graph {
         float y1 = finalNodePosition.getY();
 
         return (float) Math.sqrt(Math.pow((x0 - x1), 2) + Math.pow((y0 - y1), 2));
+    }
+
+    private float calcVisibilityBetweenToNodes(Edge edge) {
+        float distance = edge.getDistance();
+
+        if (distance <= 0) {
+            return 0f;
+        }
+
+        return 1 / edge.getDistance();
     }
 
 }

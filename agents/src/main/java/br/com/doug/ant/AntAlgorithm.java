@@ -1,19 +1,31 @@
 package br.com.doug.ant;
 
-import lombok.Data;
-
-@Data
-public class AntAlgorithm {
+public interface AntAlgorithm {
 
     /*
-    The coefficient RHO must be set to a value < 1 to avoid unlimited accumulation of trail
-    */
-    private final Float RHO = 0.5f;
+     * Number of cities
+     * */
+    Integer N = 3;
 
-    private final Float ALPHA = 0f;
+    /*
+     * Number of ants
+     * */
+    Integer M = 3;
 
-    private final Float BETA = 0f;
+    /*
+     * Number of edges between towns
+     * */
+    Integer E = 2;
 
-    private final Graph graph = new Graph();
+    /*
+     * The coefficient RHO must be set to a value < 1 to avoid unlimited accumulation of trail
+     */
+    Float RHO = 0.7f;
+
+    Float ALPHA = 1f;
+
+    Float BETA = 1f;
+
+    Integer Q1 = 100;
 
 }
