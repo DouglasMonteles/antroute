@@ -68,7 +68,7 @@ public class Graph {
         edge.setVisibility(visibility);
 
         // Set default trail intensity for every edge(i,j)
-        float intensityOfTrail = 0f;
+        float intensityOfTrail = 0.1f;
         edge.setIntensityOfTrail(intensityOfTrail);
 
         // Set default total pheromone for every edge(i,j)
@@ -123,11 +123,10 @@ public class Graph {
     private float calcVisibilityBetweenToNodes(Edge edge) {
         float distance = edge.getDistance();
 
-        if (distance <= 0) {
+        if (distance == 0f)
             return 0f;
-        }
 
-        return 1 / edge.getDistance();
+        return 1 / distance;
     }
 
 }

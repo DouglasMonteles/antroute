@@ -26,6 +26,9 @@ public interface AntAlgorithm {
 
     Float BETA = 1f;
 
-    Integer Q1 = 100;
+    /*
+    * NC is the number of cycles
+    * */
+    Integer NC_MAX = 3;
 
 }

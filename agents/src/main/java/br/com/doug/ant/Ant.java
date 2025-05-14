@@ -2,10 +2,7 @@ package br.com.doug.ant;
 
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Data
 public class Ant {
@@ -16,6 +13,7 @@ public class Ant {
     private Node nextNode;
 
     private final Set<Node> tabuList = new HashSet<>();
+    private final List<Node> pathFound = new ArrayList<>();
 
     public Ant(String label, Node initialNode) {
         this.label = label;
@@ -24,9 +22,15 @@ public class Ant {
         this.nextNode = null;
 
         this.addNodeToTabuList(initialNode);
+        this.pathFound.add(initialNode);
     }
 
     public void move(Graph graph) {
+        // First node is always the initial node
+        if (!pathFound.contains(initialNode)) {
+            pathFound.add(initialNode);
+        }
+
         Node currentNode = this.nextNode == null ? this.initialNode : this.nextNode;
 
         // Only node not in tabulist are available
@@ -37,7 +41,7 @@ public class Ant {
                 .toList();
 
         if (!moveNodes.isEmpty()) {
-            Node nextNode = this.getNodeWithMaxProbabilityToMove(moveNodes, graph);
+            Node nextNode = this.getNodeWithMaxProbabilityToMove(actualNode, moveNodes, graph);
             this.nextNode = nextNode;
             this.addNodeToTabuList(nextNode);
 
@@ -47,8 +51,15 @@ public class Ant {
             // Move to select next node
             this.actualNode = nextNode;
 
-            System.out.println("Ant: " + this.label + " -> Next node: " + nextNode.getName());
+            // Update path found
+            this.pathFound.add(nextNode);
+
+            // System.out.println("Ant: " + this.label + " -> Next node: " + nextNode.getName());
         }
+    }
+
+    public String pathFound() {
+        return pathFound.stream().map(Node::getName).toList().toString();
     }
 
     private boolean isNodeNotInTabuList(Node node) {
@@ -59,31 +70,21 @@ public class Ant {
         this.tabuList.add(node);
     }
 
-    private Node getNodeWithMaxProbabilityToMove(List<Node> nodes, Graph graph) {
-        float maxProbability = Float.MIN_VALUE;
-        Node selectedNode = nodes.get(0);
+    private Node getNodeWithMaxProbabilityToMove(Node actualNode, List<Node> nodesNotInTabuList, Graph graph) {
+        float maxProbability = -1f;
+        Node selectedNode = null;
 
-        for (Node node : nodes) {
-            for (Edge edge : graph.getEdges()) {
-                if (edge.isBidirectional()) {
-                    if (edge.getNodeA().equals(node) || edge.getNodeB().equals(node)) {
-                        double probability = this.calcProbability(graph, edge);
+        List<Edge> edgesToMoveTo = graph.getEdges()
+                .stream()
+                .filter(edge -> edge.getNodeA().equals(actualNode) && nodesNotInTabuList.contains(edge.getNodeB()))
+                .toList();
 
-                        if (maxProbability < probability) {
-                            maxProbability = (float) probability;
-                            selectedNode = edge.getNodeB();
-                        }
-                    }
-                } else {
-                    if (edge.getNodeA().equals(actualNode) && edge.getNodeB().equals(node)) {
-                        double probability = this.calcProbability(graph, edge);
+        for (Edge edge : edgesToMoveTo) {
+            double probability = this.calcProbability(graph, edge);
 
-                        if (maxProbability < probability) {
-                            maxProbability = (float) probability;
-                            selectedNode = edge.getNodeB();
-                        }
-                    }
-                }
+            if (maxProbability < probability) {
+                maxProbability = (float) probability;
+                selectedNode = edge.getNodeB();
             }
         }
 
@@ -92,7 +93,7 @@ public class Ant {
 
     private double calcProbability(Graph graph, Edge edge) {
         double numerator = (Math.pow(edge.getIntensityOfTrail(), AntAlgorithm.ALPHA) * Math.pow(edge.getVisibility(), AntAlgorithm.BETA));
-        double denominator = 0f;
+        double denominator = 0d;
 
         for (Edge edge2 : graph.getEdges()) {
             denominator += (Math.pow(edge2.getIntensityOfTrail(), AntAlgorithm.ALPHA) * Math.pow(edge2.getVisibility(), AntAlgorithm.BETA));
