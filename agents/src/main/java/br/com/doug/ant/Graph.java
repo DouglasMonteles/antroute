@@ -14,7 +14,7 @@ public class Graph {
     * */
     public void addEdge(Node startNode, Node finalNode) {
         Edge edge = new Edge();
-        edge.setBidirectional(false);
+        edge.setBidirectional(true);
 
         // Set initial and final node
         edge.setNodeA(startNode);

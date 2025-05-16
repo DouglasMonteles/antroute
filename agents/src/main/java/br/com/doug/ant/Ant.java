@@ -29,15 +29,15 @@ public class Ant {
         // First node is always the initial node
         if (!pathFound.contains(initialNode)) {
             pathFound.add(initialNode);
+            this.addNodeToTabuList(initialNode);
         }
-
-        Node currentNode = this.nextNode == null ? this.initialNode : this.nextNode;
 
         // Only node not in tabulist are available
         List<Node> moveNodes = graph
-                .getEdges(currentNode)
+                .getEdges(actualNode)
                 .stream()
                 .filter(this::isNodeNotInTabuList)
+                .filter(node -> !node.equals(actualNode))
                 .toList();
 
         if (!moveNodes.isEmpty()) {
@@ -62,6 +62,10 @@ public class Ant {
         return pathFound.stream().map(Node::getName).toList().toString();
     }
 
+    public boolean isTabuListFull(int numberOfNodes) {
+        return this.tabuList.size() == numberOfNodes;
+    }
+
     private boolean isNodeNotInTabuList(Node node) {
         return !this.tabuList.contains(node);
     }
@@ -76,7 +80,7 @@ public class Ant {
 
         List<Edge> edgesToMoveTo = graph.getEdges()
                 .stream()
-                .filter(edge -> edge.getNodeA().equals(actualNode) && nodesNotInTabuList.contains(edge.getNodeB()))
+                .filter(edge -> (edge.getNodeA().equals(actualNode) && nodesNotInTabuList.contains(edge.getNodeB())) || (edge.getNodeB().equals(actualNode) && nodesNotInTabuList.contains(edge.getNodeA())))
                 .toList();
 
         for (Edge edge : edgesToMoveTo) {
@@ -84,8 +88,13 @@ public class Ant {
 
             if (maxProbability < probability) {
                 maxProbability = (float) probability;
-                selectedNode = edge.getNodeB();
+
+                selectedNode = actualNode.equals(edge.getNodeA()) ? edge.getNodeB() : edge.getNodeA();
             }
+        }
+
+        if (selectedNode == null) {
+            System.out.println();
         }
 
         return selectedNode;

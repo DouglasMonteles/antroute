@@ -22,7 +22,7 @@ public interface AntAlgorithm {
      */
     Float RHO = 0.7f;
 
-    Float ALPHA = 1f;
+    Float ALPHA = 0f;
 
     Float BETA = 1f;
 

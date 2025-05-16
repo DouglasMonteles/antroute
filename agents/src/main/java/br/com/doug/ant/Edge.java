@@ -25,7 +25,7 @@ public class Edge {
     * */
     private Float pheromoneOnEdge = 0f;
 
-    private boolean isBidirectional = false;
+    private boolean isBidirectional;
 
     public void incrementPheromone(Float pheromoneOnEdge) {
         this.pheromoneOnEdge += pheromoneOnEdge;

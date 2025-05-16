@@ -31,9 +31,13 @@ public class AntDensityAlgorithm implements AntAlgorithm {
         Node nodeF = new Node("F", new Node.Position(60f, 10f));
 
         Ant ant1 = new Ant("AntA", nodeA);
-        Ant ant2 = new Ant("AntB", nodeA);
+        Ant ant2 = new Ant("AntB", nodeB);
+        Ant ant3 = new Ant("AntC", nodeC);
+        Ant ant4 = new Ant("AntD", nodeD);
+        Ant ant5 = new Ant("AntE", nodeE);
+        Ant ant6 = new Ant("AntF", nodeF);
 
-        List<Ant> ants = List.of(ant1, ant2);
+        List<Ant> ants = List.of(ant1, ant2, ant3, ant4, ant5, ant6);
 
         graph.addEdge(nodeA, nodeB);
         graph.addEdge(nodeA, nodeC);
@@ -55,13 +59,22 @@ public class AntDensityAlgorithm implements AntAlgorithm {
         graph.addEdge(nodeF, nodeD);
 
         for (; NC < AntAlgorithm.NC_MAX; NC++) {
-            // for every town
-            graph.getNodes().forEach(node -> {
-                // for every k-th ant on town i still not moved
-                ants.forEach(ant -> {
-                    ant.move(graph);
+            // Repeat until tabu list is full
+            while (true) {
+                // for every town
+                graph.getNodes().forEach(node -> {
+                    // for every k-th ant on town i still not moved
+                    ants.forEach(ant -> {
+                        if (ant.getActualNode().equals(node)) {
+                            ant.move(graph);
+                        }
+                    });
                 });
-            });
+
+                if (ants.stream().allMatch(ant -> ant.isTabuListFull(graph.getNodes().size()))) {
+                    break;
+                }
+            }
 
             ants.forEach(ant -> {
                 System.out.println(ant.pathFound());
@@ -73,7 +86,7 @@ public class AntDensityAlgorithm implements AntAlgorithm {
             List<List<Node>> antsWhoChoseDistinctPath = ants.stream().map(Ant::getPathFound).distinct().toList();
             boolean isAllAntsWithSamePath = antsWhoChoseDistinctPath.size() == 1;
 
-            if (NC > 0 && isAllAntsWithSamePath) {
+            if (isAllAntsWithSamePath) {
                 // All the ants choose the same tour
                 break;
             }
@@ -85,6 +98,10 @@ public class AntDensityAlgorithm implements AntAlgorithm {
 
                 // Empty path found
                 ant.getPathFound().clear();
+
+                // Reset nextNode and actualNode
+                ant.setNextNode(null);
+                ant.setActualNode(ant.getInitialNode());
             });
 
             // For every edge (i,j) set ∆τij(t,t+1):=0
