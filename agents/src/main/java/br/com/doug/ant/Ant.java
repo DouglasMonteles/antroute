@@ -93,10 +93,6 @@ public class Ant {
             }
         }
 
-        if (selectedNode == null) {
-            System.out.println();
-        }
-
         return selectedNode;
     }
 

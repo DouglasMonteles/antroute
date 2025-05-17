@@ -19,6 +19,7 @@ public class AntDensityAlgorithm implements AntAlgorithm {
     private Integer t = 0;
 
     public static void main(String[] args) {
+        AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm();
         int NC = 0;
 
         // Init graph
@@ -82,12 +83,26 @@ public class AntDensityAlgorithm implements AntAlgorithm {
 
             graph.computeEvaporationOfTrail();
 
-            // Break case
-            List<List<Node>> antsWhoChoseDistinctPath = ants.stream().map(Ant::getPathFound).distinct().toList();
-            boolean isAllAntsWithSamePath = antsWhoChoseDistinctPath.size() == 1;
+            /*
+            * TODO: Tours in TSP are closed loops:
+            *   Ex: a tour A → B → C → D → A is the same as B → C → D → A → B, or C → D → A → B → C.
+            *   In TSP, these are considered the same tour, just with a different rotation.
+            * */
+            boolean isAllAntsWithSamePath = true;
+
+            for (int i = 0; i < ants.size() - 1; i++) {
+                Ant fistAnt = ants.get(i);
+                Ant secondAnt = ants.get(i+1);
+
+                if (!antDensityAlgorithm.isSameTour(fistAnt.getPathFound(), secondAnt.getPathFound())) {
+                    isAllAntsWithSamePath = false;
+                    break;
+                }
+            }
 
             if (isAllAntsWithSamePath) {
                 // All the ants choose the same tour
+                System.out.println("is all same");
                 break;
             }
 
@@ -111,6 +126,40 @@ public class AntDensityAlgorithm implements AntAlgorithm {
         }
     }
 
+    /*
+        Double the fist tour and search and verify if tour2 is a sublist of tour1.
+        Ex:
+            tour1 = [1,2,3]
+            aux = [1,2,3,1,2,3]
+            tour2 = [3,1,2]
+            isSameTour(tour1,tour2) is true because:
+                aux [1,2,->3,1,2<-,3]
+    */
+    public boolean isSameTour(List<Node> tour1, List<Node> tour2) {
+        if (tour1.size() != tour2.size())
+            return false;
 
+        int lenTour1 = tour1.size();
+        Node[] doubleTour1 = new Node[lenTour1 * 2];
+
+        // When i >= lenTour1 then i resets to 0, 1, 2,...
+        for (int i = 0; i < lenTour1 * 2; i++)
+            doubleTour1[i] = tour1.get(i % lenTour1);
+
+        for (int i = 0; i < lenTour1; i++) {
+            boolean isMatch = true;
+
+            for (int j = 0; j < lenTour1; j++) {
+                if (!doubleTour1[i + j].equals(tour2.get(j))) {
+                    isMatch = false;
+                    break;
+                }
+            }
+
+            if (isMatch) return true;
+        }
+
+        return false;
+    }
 
 }

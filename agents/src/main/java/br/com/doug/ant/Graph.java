@@ -40,7 +40,7 @@ public class Graph {
 
     public void incrementPheromoneOnEdge(Node actualNode, Node nextNode, Float pheromone) {
         for (var edge : getEdges()) {
-            if (edge.getNodeA().equals(actualNode) && edge.getNodeB().equals(nextNode)) {
+            if ((edge.getNodeA().equals(actualNode) && edge.getNodeB().equals(nextNode)) || (edge.getNodeA().equals(nextNode) && edge.getNodeB().equals(actualNode))) {
                 edge.incrementPheromone(AntDensityAlgorithm.Q1);
                 break;
             }
