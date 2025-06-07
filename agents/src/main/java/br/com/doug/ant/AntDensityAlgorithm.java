@@ -27,39 +27,19 @@ public class AntDensityAlgorithm implements AntAlgorithm {
         Node nodeA = new Node("A", new Node.Position(10f, 10f));
         Node nodeB = new Node("B", new Node.Position(20f, 20f));
         Node nodeC = new Node("C", new Node.Position(30f, 10f));
-        Node nodeD = new Node("D", new Node.Position(40f, 10f));
-        Node nodeE = new Node("E", new Node.Position(50f, 10f));
-        Node nodeF = new Node("F", new Node.Position(60f, 10f));
 
         Ant ant1 = new Ant("AntA", nodeA);
         Ant ant2 = new Ant("AntB", nodeB);
         Ant ant3 = new Ant("AntC", nodeC);
-        Ant ant4 = new Ant("AntD", nodeD);
-        Ant ant5 = new Ant("AntE", nodeE);
-        Ant ant6 = new Ant("AntF", nodeF);
 
-        List<Ant> ants = List.of(ant1, ant2, ant3, ant4, ant5, ant6);
+        List<Ant> ants = List.of(ant1, ant2, ant3);
 
         graph.addEdge(nodeA, nodeB);
         graph.addEdge(nodeA, nodeC);
-        graph.addEdge(nodeA, nodeF);
 
-        graph.addEdge(nodeB, nodeD);
-        graph.addEdge(nodeB, nodeE);
+        graph.addEdge(nodeB, nodeC);
 
-        graph.addEdge(nodeC, nodeB);
-        graph.addEdge(nodeC, nodeF);
-
-        graph.addEdge(nodeD, nodeC);
-        graph.addEdge(nodeD, nodeA);
-
-        graph.addEdge(nodeE, nodeD);
-        graph.addEdge(nodeE, nodeF);
-
-        graph.addEdge(nodeF, nodeB);
-        graph.addEdge(nodeF, nodeD);
-
-        for (; NC < AntAlgorithm.NC_MAX; NC++) {
+        for (; NC < AntAlgorithm.NC_MAX+7; NC++) {
             // Repeat until tabu list is full
             while (true) {
                 // for every town
@@ -72,7 +52,8 @@ public class AntDensityAlgorithm implements AntAlgorithm {
                     });
                 });
 
-                if (ants.stream().allMatch(ant -> ant.isTabuListFull(graph.getNodes().size()))) {
+                boolean isAllAntsWithTabuListFull = ants.stream().allMatch(ant -> ant.isTabuListFull(graph.getNodes().size()));
+                if (isAllAntsWithTabuListFull) {
                     break;
                 }
             }
@@ -102,6 +83,7 @@ public class AntDensityAlgorithm implements AntAlgorithm {
 
             if (isAllAntsWithSamePath) {
                 // All the ants choose the same tour
+                System.out.println();
                 System.out.println("is all same");
                 break;
             }
