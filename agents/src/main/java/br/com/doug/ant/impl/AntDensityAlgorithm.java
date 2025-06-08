@@ -1,5 +1,9 @@
-package br.com.doug.ant;
+package br.com.doug.ant.impl;
 
+import br.com.doug.ant.Ant;
+import br.com.doug.ant.AntAlgorithm;
+import br.com.doug.ant.Graph;
+import br.com.doug.ant.Node;
 import lombok.Data;
 
 import java.util.List;
@@ -18,10 +22,15 @@ public class AntDensityAlgorithm implements AntAlgorithm {
     * */
     private Integer t = 0;
 
-    public static void main(String[] args) {
-        AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm();
-        int NC = 0;
+    private final Graph graph;
+    private final List<Ant> ants;
 
+    public AntDensityAlgorithm(Graph graph, List<Ant> ants) {
+        this.graph = graph;
+        this.ants = ants;
+    }
+
+    public static void main(String[] args) {
         // Init graph
         Graph graph = new Graph();
         Node nodeA = new Node("A", new Node.Position(10f, 10f));
@@ -38,8 +47,14 @@ public class AntDensityAlgorithm implements AntAlgorithm {
         graph.addEdge(nodeA, nodeC);
 
         graph.addEdge(nodeB, nodeC);
+        AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm(graph, ants);
+        antDensityAlgorithm.run();
+    }
 
-        for (; NC < AntAlgorithm.NC_MAX+7; NC++) {
+    public void run() {
+        int NC = 0;
+
+        for (; NC < AntAlgorithm.NC_MAX; NC++) {
             // Repeat until tabu list is full
             while (true) {
                 // for every town
@@ -62,6 +77,7 @@ public class AntDensityAlgorithm implements AntAlgorithm {
                 System.out.println(ant.pathFound());
             });
 
+            graph.updateShortestPath(ants);
             graph.computeEvaporationOfTrail();
 
             /*
@@ -75,19 +91,25 @@ public class AntDensityAlgorithm implements AntAlgorithm {
                 Ant fistAnt = ants.get(i);
                 Ant secondAnt = ants.get(i+1);
 
-                if (!antDensityAlgorithm.isSameTour(fistAnt.getPathFound(), secondAnt.getPathFound())) {
+                if (!isSameTour(fistAnt.getPathFound(), secondAnt.getPathFound())) {
                     isAllAntsWithSamePath = false;
                     break;
                 }
             }
 
-            if (isAllAntsWithSamePath) {
-                // All the ants choose the same tour
-                System.out.println();
-                System.out.println("is all same");
+//            if (isAllAntsWithSamePath) {
+//                // All the ants choose the same tour
+//                System.out.println();
+//                System.out.println("is all same");
+//                break;
+//            }
+
+            if (NC >= NC_MAX - 1 || isAllAntsWithSamePath) {
+                System.out.println("Shortest path found:");
+                System.out.println(graph.getShortestPath().toString());
+                System.out.println(graph.getShortestPathDistance());
                 break;
             }
-
 
             ants.forEach(ant -> {
                 // Empty all tabu lists

@@ -1,5 +1,6 @@
 package br.com.doug.ant;
 
+import br.com.doug.ant.impl.AntDensityAlgorithm;
 import lombok.Data;
 
 import java.util.*;
@@ -8,6 +9,8 @@ import java.util.*;
 public class Graph {
 
     private final Set<Edge> edges = Collections.synchronizedSet(new HashSet<>());
+    private List<Node> shortestPath = null;
+    private Float shortestPathDistance = null;
 
     /*
     * Bidirectional graph
@@ -105,6 +108,24 @@ public class Graph {
         }
 
         return nodes;
+    }
+
+    public void updateShortestPath(List<Ant> ants) {
+        float shortestDistance = Float.MAX_VALUE;
+
+        for (Ant ant : ants) {
+            if (ant.getPathFoundLength(this) < shortestDistance && !ant.getPathFound().isEmpty()) {
+                this.shortestPath = ant.getPathFound();
+                this.shortestPathDistance = shortestDistance;
+            }
+        }
+    }
+
+    public Optional<Float> getEdgeDistance(Node node1, Node node2) {
+        return edges.stream()
+                .filter(edge -> edge.getNodeA().equals(node1) && edge.getNodeB().equals(node2) || edge.getNodeA().equals(node2) && edge.getNodeB().equals(node1))
+                .findFirst()
+                .map(Edge::getDistance);
     }
 
     private float calcEuclideanDistanceBetweenTwoConnectedNodes(Node startNode, Node finalNode) {

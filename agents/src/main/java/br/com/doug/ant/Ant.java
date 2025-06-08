@@ -1,5 +1,6 @@
 package br.com.doug.ant;
 
+import br.com.doug.ant.impl.AntDensityAlgorithm;
 import br.com.doug.utils.RandomUtils;
 import lombok.Data;
 
@@ -65,6 +66,20 @@ public class Ant {
 
     public boolean isTabuListFull(int numberOfNodes) {
         return this.tabuList.size() == numberOfNodes;
+    }
+
+    public float getPathFoundLength(Graph graph) {
+        float distance = 0f;
+
+        for (int i = 0, j = 1; i < pathFound.size() - 1; i++, j++) {
+            Optional<Float> dist = graph.getEdgeDistance(pathFound.get(i), pathFound.get(j));
+
+            if (dist.isPresent()) {
+                distance += dist.get();
+            }
+        }
+
+        return distance;
     }
 
     private boolean isNodeNotInTabuList(Node node) {

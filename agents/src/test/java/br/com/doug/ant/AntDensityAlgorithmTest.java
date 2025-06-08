@@ -1,5 +1,6 @@
 package br.com.doug.ant;
 
+import br.com.doug.ant.impl.AntDensityAlgorithm;
 import org.junit.Assert;
 import org.junit.Test;
 
