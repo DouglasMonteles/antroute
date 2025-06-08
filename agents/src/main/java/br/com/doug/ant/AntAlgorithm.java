@@ -1,5 +1,7 @@
 package br.com.doug.ant;
 
+import java.util.List;
+
 public interface AntAlgorithm {
 
     /*
@@ -30,5 +32,11 @@ public interface AntAlgorithm {
     * NC is the number of cycles
     * */
     Integer NC_MAX = 3;
+
+    void run();
+
+    List<Node> shortestPath();
+
+    Float shortestDistance();
 
 }

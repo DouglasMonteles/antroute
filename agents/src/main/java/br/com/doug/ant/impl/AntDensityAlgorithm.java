@@ -130,6 +130,14 @@ public class AntDensityAlgorithm implements AntAlgorithm {
         }
     }
 
+    public List<Node> shortestPath() {
+        return graph.getShortestPath();
+    }
+
+    public Float shortestDistance() {
+        return graph.getShortestPathDistance();
+    }
+
     /*
         Double the fist tour and search and verify if tour2 is a sublist of tour1.
         Ex:
