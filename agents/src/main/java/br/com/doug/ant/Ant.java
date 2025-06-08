@@ -85,7 +85,7 @@ public class Ant {
                 .toList();
 
         for (Edge edge : edgesToMoveTo) {
-            double probability = this.calcProbability(graph, edge);
+            double probability = this.tabuList.size() == 1  ? RandomUtils.randInt(0, 1) : this.calcProbability(graph, edge);
 
             if (maxProbability < probability) {
                 maxProbability = (float) probability;

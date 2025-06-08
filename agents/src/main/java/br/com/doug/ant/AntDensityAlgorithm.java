@@ -115,7 +115,7 @@ public class AntDensityAlgorithm implements AntAlgorithm {
             aux = [1,2,3,1,2,3]
             tour2 = [3,1,2]
             isSameTour(tour1,tour2) is true because:
-                aux [1,2,->3,1,2<-,3]
+                aux [1,2,|3,1,2|,3]
     */
     public boolean isSameTour(List<Node> tour1, List<Node> tour2) {
         if (tour1.size() != tour2.size())
