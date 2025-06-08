@@ -1,12 +1,11 @@
 package br.com.doug.agents;
 
+import br.com.doug.ant.Ant;
+import br.com.doug.ant.Node;
+import br.com.doug.exceptions.AgentException;
 import jade.core.Agent;
-import jade.core.Node;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.core.behaviours.SimpleBehaviour;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /*
 * Each ant is a simple agent with the following characteristics:
@@ -18,10 +17,20 @@ import java.util.List;
 * */
 public class AntAgent extends Agent {
 
-    private final List<Node> tabuList = new ArrayList<>();
+    private Ant ant;
 
     @Override
     protected void setup() {
+        Object[] args = getArguments();
+
+        if (args == null || args.length < 2) {
+            throw new AgentException("AntAgent needs at lest two arguments.");
+        }
+
+        String antLabel = (String) args[0];
+        Node antInitialNode = (Node) args[1];
+
+        this.ant = new Ant(antLabel, antInitialNode);
 
         SequentialBehaviour antMoveCharacteristics = new SequentialBehaviour();
         antMoveCharacteristics.addSubBehaviour(new ChooseTownToGo());
@@ -33,7 +42,7 @@ public class AntAgent extends Agent {
 
     @Override
     protected void takeDown() {
-        tabuList.clear();
+
     }
 
     /*

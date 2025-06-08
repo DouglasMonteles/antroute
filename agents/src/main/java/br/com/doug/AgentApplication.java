@@ -1,28 +1,27 @@
 package br.com.doug;
 
+import br.com.doug.agents.AntAlgorithmAgent;
 import br.com.doug.agents.ServerAgent;
-import jade.core.Profile;
-import jade.core.ProfileImpl;
-import jade.core.Runtime;
-import jade.wrapper.ContainerController;
+import br.com.doug.exceptions.AgentException;
+import br.com.doug.services.JadeContainerService;
+import br.com.doug.services.impl.JadeContainerServiceImpl;
 import jade.wrapper.StaleProxyException;
 
 public class AgentApplication {
 
+    private static final JadeContainerService jadeContainerService = JadeContainerServiceImpl.INSTANCE;
+
     public static void main(String[] args) {
-        Runtime jadeRuntime = Runtime.instance();
-        Profile jadeProfile = new ProfileImpl();
-
-        ContainerController containerController = jadeRuntime.createMainContainer(jadeProfile);
-
         try {
-            var rmaAgent = containerController.createNewAgent("rma", "jade.tools.rma.rma", null);
-            var serverAgent = containerController.createNewAgent("server", ServerAgent.class.getName(), null);
+            var rmaAgent = jadeContainerService.createAgent("rma", "jade.tools.rma.rma", null);
+            var antAlgorithmAgent = jadeContainerService.createAgent("antAlgorithmAgent", AntAlgorithmAgent.class.getName(), null);
+            var serverAgent = jadeContainerService.createAgent("server", ServerAgent.class.getName(), null);
 
             rmaAgent.start();
+            antAlgorithmAgent.start();
             serverAgent.start();
         } catch (StaleProxyException e) {
-            throw new RuntimeException(e);
+            throw new AgentException(e);
         }
     }
 
