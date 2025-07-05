@@ -4,13 +4,17 @@ import br.com.doug.ant.impl.AntDensityAlgorithm;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AntDensityAlgorithmTest {
 
+    private final Graph graph = new Graph();
+    private final List<Ant> ants = new ArrayList<>();
+
     @Test
     public void isSameTour() {
-        AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm();
+        AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm(graph, ants);
 
         Node nodeA = new Node("A", new Node.Position(10f, 30f));
         Node nodeB = new Node("B", new Node.Position(20f, 20f));
@@ -34,7 +38,7 @@ public class AntDensityAlgorithmTest {
 
     @Test
     public void isNotSameTourWhenOnePathIsReverseOfTheOther() {
-        AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm();
+        AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm(graph, ants);
 
         Node nodeA = new Node("A", new Node.Position(10f, 30f));
         Node nodeB = new Node("B", new Node.Position(20f, 20f));
@@ -58,7 +62,7 @@ public class AntDensityAlgorithmTest {
 
     @Test
     public void isNotSameTourWhenOnePathNotContainsASubListOfTheOtherPath() {
-        AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm();
+        AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm(graph, ants);
 
         Node nodeA = new Node("A", new Node.Position(10f, 30f));
         Node nodeB = new Node("B", new Node.Position(20f, 20f));
