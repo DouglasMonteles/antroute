@@ -107,6 +107,7 @@ public class AntDensityAlgorithm implements AntAlgorithm {
             if (NC >= NC_MAX - 1 || isAllAntsWithSamePath) {
                 System.out.println("Shortest path found:");
                 System.out.println(graph.getShortestPath().toString());
+                System.out.println("Shortest distance found:");
                 System.out.println(graph.getShortestPathDistance());
                 break;
             }

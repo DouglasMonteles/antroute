@@ -3,11 +3,18 @@ package br.com.doug.ant;
 import br.com.doug.ant.impl.AntDensityAlgorithm;
 import br.com.doug.utils.RandomUtils;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
 @Data
-public class Ant {
+@EqualsAndHashCode(of = "label")
+public class Ant implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 173894473866953571L;
 
     private String label;
     private Node initialNode;
@@ -27,23 +34,30 @@ public class Ant {
         this.pathFound.add(initialNode);
     }
 
-    public void move(Graph graph) {
+    public void setInitialNodeInPathFound() {
         // First node is always the initial node
         if (!pathFound.contains(initialNode)) {
             pathFound.add(initialNode);
             this.addNodeToTabuList(initialNode);
         }
+    }
+
+    public List<Node> getAvailableNodes(Graph graph) {
+        return graph.getEdges(actualNode)
+            .stream()
+            .filter(this::isNodeNotInTabuList)
+            .filter(node -> !node.equals(actualNode))
+            .toList();
+    }
+
+    public void move(Graph graph) {
+        setInitialNodeInPathFound();
 
         // Only node not in tabulist are available
-        List<Node> moveNodes = graph
-                .getEdges(actualNode)
-                .stream()
-                .filter(this::isNodeNotInTabuList)
-                .filter(node -> !node.equals(actualNode))
-                .toList();
+        List<Node> moveNodes = getAvailableNodes(graph);
 
         if (!moveNodes.isEmpty()) {
-            Node nextNode = this.getNodeWithMaxProbabilityToMove(actualNode, moveNodes, graph);
+            Node nextNode = getNodeWithMaxProbabilityToMove(actualNode, moveNodes, graph);
             this.nextNode = nextNode;
             this.addNodeToTabuList(nextNode);
 
@@ -82,15 +96,7 @@ public class Ant {
         return distance;
     }
 
-    private boolean isNodeNotInTabuList(Node node) {
-        return !this.tabuList.contains(node);
-    }
-
-    private void addNodeToTabuList(Node node) {
-        this.tabuList.add(node);
-    }
-
-    private Node getNodeWithMaxProbabilityToMove(Node actualNode, List<Node> nodesNotInTabuList, Graph graph) {
+    public Node getNodeWithMaxProbabilityToMove(Node actualNode, List<Node> nodesNotInTabuList, Graph graph) {
         float maxProbability = -1f;
         Node selectedNode = null;
 
@@ -110,6 +116,14 @@ public class Ant {
         }
 
         return selectedNode;
+    }
+
+    private boolean isNodeNotInTabuList(Node node) {
+        return !this.tabuList.contains(node);
+    }
+
+    public void addNodeToTabuList(Node node) {
+        this.tabuList.add(node);
     }
 
     private double calcProbability(Graph graph, Edge edge) {

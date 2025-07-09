@@ -1,6 +1,6 @@
 package br.com.doug;
 
-import br.com.doug.agents.AntAlgorithmAgent;
+import br.com.doug.agents.AntManagerAgent;
 import br.com.doug.agents.ServerAgent;
 import br.com.doug.exceptions.AgentException;
 import br.com.doug.services.JadeContainerService;
@@ -14,11 +14,11 @@ public class AgentApplication {
     public static void main(String[] args) {
         try {
             var rmaAgent = jadeContainerService.createAgent("rma", "jade.tools.rma.rma", null);
-            var antAlgorithmAgent = jadeContainerService.createAgent("antAlgorithmAgent", AntAlgorithmAgent.class.getName(), null);
+            var antManagerAgent = jadeContainerService.createAgent("antManagerAgent", AntManagerAgent.class.getName(), null);
             var serverAgent = jadeContainerService.createAgent("server", ServerAgent.class.getName(), null);
 
             rmaAgent.start();
-            antAlgorithmAgent.start();
+            antManagerAgent.start();
             serverAgent.start();
         } catch (StaleProxyException e) {
             throw new AgentException(e);
