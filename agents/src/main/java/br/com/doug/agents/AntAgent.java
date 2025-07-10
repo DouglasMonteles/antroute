@@ -79,6 +79,8 @@ public class AntAgent extends Agent {
             MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
             ACLMessage request = receive(messageTemplate);
 
+            //System.out.println("Sou agente " + getAgent().getLocalName() + " e recebi a mensagem.");
+
             if (request != null) {
                 try {
                     Object body = request.getContentObject();
@@ -92,15 +94,15 @@ public class AntAgent extends Agent {
 
                     switch (step) {
                         case 1:
-                            System.out.println("Step 1");
+                            //System.out.println("Step 1");
                             ant.setInitialNodeInPathFound();
                             step = 2;
                         case 2:
-                            System.out.println("Step 2");
+                            //System.out.println("Step 2");
                             moveNodes = ant.getAvailableNodes(graph);
                             step = 3;
                         case 3:
-                            System.out.println("Step 3");
+                            //System.out.println("Step 3");
 
                             if (moveNodes != null) {
                                 nextNode = ant.getNodeWithMaxProbabilityToMove(ant.getActualNode(), moveNodes, graph);
@@ -109,16 +111,16 @@ public class AntAgent extends Agent {
 
                             step = 4;
                         case 4:
-                            System.out.println("Step 4");
+                            //System.out.println("Step 4");
                             // Update pheromone on edge
                             graph.incrementPheromoneOnEdge(ant.getActualNode(), nextNode, AntDensityAlgorithm.Q1);
                             step = 5;
                         case 5:
-                            System.out.println("Step 5");
+                            //System.out.println("Step 5");
                             ant.addNodeToTabuList(nextNode);
                             step = 6;
                         case 6:
-                            System.out.println("Step 6");
+                            //System.out.println("Step 6");
 
                             // Move to select next node
                             ant.setActualNode(nextNode);
@@ -129,6 +131,7 @@ public class AntAgent extends Agent {
                             ACLMessage response = request.createReply();
                             response.setPerformative(Peformative.ANT_RESPONSE_OK);
                             response.setContentObject(ant);
+                            System.out.println("Send: " + getAgent().getLocalName() + " - " + ant.getTabuList());
                             send(response);
                             step = 1;
                     }

@@ -123,7 +123,8 @@ public class Ant implements Serializable {
     }
 
     public void addNodeToTabuList(Node node) {
-        this.tabuList.add(node);
+        if (node != null)
+            this.tabuList.add(node);
     }
 
     private double calcProbability(Graph graph, Edge edge) {

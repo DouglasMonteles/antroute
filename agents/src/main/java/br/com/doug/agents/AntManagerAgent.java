@@ -182,21 +182,20 @@ public class AntManagerAgent extends Agent {
             if (antReply != null) {
                 try {
                     Ant ant = (Ant) antReply.getContentObject();
-                    System.out.println(ant);
-                    ants.add(ant);
+                    System.out.println("Received: " + antReply.getSender().getLocalName() + " - " + ant.getTabuList());
+                    if (ant.getTabuList().size() == graph.getNodes().size())
+                        ants.add(ant);
 
-                    System.out.println("Ants size: " + ants.size());
-
-                    if (ant != null && ant.getPathFound() != null && !ant.getPathFound().isEmpty())
-                        System.out.println(ant.getPathFound().stream().filter(Objects::nonNull).map(Node::getName).toList());
+//                    if (ant != null && ant.getPathFound() != null && !ant.getPathFound().isEmpty()) {
+//                        System.out.println(ant.getPathFound().stream().filter(Objects::nonNull).map(Node::getName).toList());
+//                    }
                 } catch (UnreadableException e) {
                     throw new RuntimeException(e);
                 }
 
                 boolean isAllAntsWithTabuListFull = ants.stream().allMatch(ant -> ant.isTabuListFull(graph.getNodes().size()));
 
-                if (isAllAntsWithTabuListFull) {
-                    System.out.println("recebeu");
+                if (isAllAntsWithTabuListFull && graph.getNodes().size() == ants.size()) {
                     ants.forEach(ant -> {
                         System.out.println(ant.pathFound());
                     });
