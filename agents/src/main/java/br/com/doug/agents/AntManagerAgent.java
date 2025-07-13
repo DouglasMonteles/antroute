@@ -89,7 +89,7 @@ public class AntManagerAgent extends Agent {
                     // for every k-th ant on town i still not moved
                     // Send message to move all ants in that node
 
-                    ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+                    ACLMessage message = new ACLMessage(Peformative.ANT_REQUEST);
 
                     try {
                         message.addReceiver(getAID("AntA"));
@@ -119,14 +119,11 @@ public class AntManagerAgent extends Agent {
             ACLMessage antReply = receive(replyTemplate);
 
             if (antReply != null) {
-                try {
-                    Ant ant = (Ant) antReply.getContentObject();
-                    LOG.info("Received: {} - {}", antReply.getSender().getLocalName(), ant.getTabuList());
-                    if (ant.getTabuList().size() == graph.getNodes().size())
-                        ants.add(ant);
-                } catch (UnreadableException e) {
-                    throw new RuntimeException(e);
-                }
+                Ant antObj = AgentUtils.getContentObject(antReply, Ant.class);
+                LOG.info("Received: {} - {}", antReply.getSender().getLocalName(), antObj.getTabuList());
+
+                if (antObj.getTabuList().size() == graph.getNodes().size())
+                    ants.add(antObj);
 
                 boolean isAllAntsWithTabuListFull = ants.stream().allMatch(ant -> ant.isTabuListFull(graph.getNodes().size()));
 

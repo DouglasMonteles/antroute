@@ -69,8 +69,6 @@ public class Ant implements Serializable {
 
             // Update path found
             this.pathFound.add(nextNode);
-
-            // System.out.println("Ant: " + this.label + " -> Next node: " + nextNode.getName());
         }
     }
 

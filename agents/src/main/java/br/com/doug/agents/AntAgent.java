@@ -9,11 +9,9 @@ import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.Serial;
 import java.util.List;
 
@@ -67,67 +65,55 @@ public class AntAgent extends Agent {
 
         @Override
         public void action() {
-            MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+            MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(Peformative.ANT_REQUEST);
             ACLMessage request = receive(messageTemplate);
 
-            //System.out.println("Sou agente " + getAgent().getLocalName() + " e recebi a mensagem.");
-
             if (request != null) {
-                try {
-                    Object body = request.getContentObject();
-                    if (body == null) return;
+                Node actualNode = AgentUtils.getContentObject(request, Node.class);
 
-                    Node actualNode = (Node) body;
+                if (actualNode == null)
+                    return;
 
-                    // Only move ants that are in the actual node
-                    if (ant == null || ant.getActualNode() == null || !ant.getActualNode().equals(actualNode))
-                        return;
+                // Only move ants that are in the actual node
+                if (ant == null || ant.getActualNode() == null || !ant.getActualNode().equals(actualNode))
+                    return;
 
-                    switch (step) {
-                        case 1:
-                            //System.out.println("Step 1");
-                            ant.setInitialNodeInPathFound();
-                            step = 2;
-                        case 2:
-                            //System.out.println("Step 2");
-                            moveNodes = ant.getAvailableNodes(graph);
-                            step = 3;
-                        case 3:
-                            //System.out.println("Step 3");
+                switch (step) {
+                    case 1:
+                        ant.setInitialNodeInPathFound();
+                        step = 2;
+                    case 2:
+                        moveNodes = ant.getAvailableNodes(graph);
+                        step = 3;
+                    case 3:
+                        if (moveNodes != null) {
+                            nextNode = ant.getNodeWithMaxProbabilityToMove(ant.getActualNode(), moveNodes, graph);
+                            ant.setNextNode(nextNode);
+                        }
 
-                            if (moveNodes != null) {
-                                nextNode = ant.getNodeWithMaxProbabilityToMove(ant.getActualNode(), moveNodes, graph);
-                                ant.setNextNode(nextNode);
-                            }
+                        step = 4;
+                    case 4:
+                        // Update pheromone on edge
+                        graph.incrementPheromoneOnEdge(ant.getActualNode(), nextNode, AntDensityAlgorithm.Q1);
+                        step = 5;
+                    case 5:
+                        ant.addNodeToTabuList(nextNode);
+                        step = 6;
+                    case 6:
+                        // Move to select next node
+                        ant.setActualNode(nextNode);
 
-                            step = 4;
-                        case 4:
-                            //System.out.println("Step 4");
-                            // Update pheromone on edge
-                            graph.incrementPheromoneOnEdge(ant.getActualNode(), nextNode, AntDensityAlgorithm.Q1);
-                            step = 5;
-                        case 5:
-                            //System.out.println("Step 5");
-                            ant.addNodeToTabuList(nextNode);
-                            step = 6;
-                        case 6:
-                            //System.out.println("Step 6");
+                        // Update path found
+                        ant.getPathFound().add(nextNode);
 
-                            // Move to select next node
-                            ant.setActualNode(nextNode);
+                        ACLMessage response = new AgentMessageBuilder(request.createReply())
+                            .setPerformative(Peformative.ANT_RESPONSE_OK)
+                            .setContentObject(ant)
+                            .build();
 
-                            // Update path found
-                            ant.getPathFound().add(nextNode);
-
-                            ACLMessage response = request.createReply();
-                            response.setPerformative(Peformative.ANT_RESPONSE_OK);
-                            response.setContentObject(ant);
-                            LOG.info("Send: {} - {}", getAgent().getLocalName(), ant.getTabuList());
-                            send(response);
-                            step = 1;
-                    }
-                } catch (IOException | UnreadableException e) {
-                    throw new RuntimeException(e);
+                        LOG.info("Send: {} - {}", getAgent().getLocalName(), ant.getTabuList());
+                        send(response);
+                        step = 1;
                 }
             } else {
                 block();
