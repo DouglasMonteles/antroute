@@ -14,6 +14,8 @@ import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serial;
@@ -28,6 +30,8 @@ import java.util.List;
 *   tour is completed (see the tabu list in the following).
 * */
 public class AntAgent extends Agent {
+
+    private static Logger LOG = LoggerFactory.getLogger(AntAgent.class);
 
     @Serial
     private static final long serialVersionUID = 3818585241476465782L;
@@ -131,7 +135,7 @@ public class AntAgent extends Agent {
                             ACLMessage response = request.createReply();
                             response.setPerformative(Peformative.ANT_RESPONSE_OK);
                             response.setContentObject(ant);
-                            System.out.println("Send: " + getAgent().getLocalName() + " - " + ant.getTabuList());
+                            LOG.info("Send: {} - {}", getAgent().getLocalName(), ant.getTabuList());
                             send(response);
                             step = 1;
                     }

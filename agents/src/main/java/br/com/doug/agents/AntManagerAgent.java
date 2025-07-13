@@ -14,6 +14,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import jade.wrapper.StaleProxyException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serial;
@@ -22,6 +24,8 @@ import java.util.*;
 import static br.com.doug.ant.AntAlgorithm.NC_MAX;
 
 public class AntManagerAgent extends Agent {
+
+    private static Logger LOG = LoggerFactory.getLogger(AntManagerAgent.class);
 
     @Serial
     private static final long serialVersionUID = -5837718391546224594L;
@@ -182,7 +186,7 @@ public class AntManagerAgent extends Agent {
             if (antReply != null) {
                 try {
                     Ant ant = (Ant) antReply.getContentObject();
-                    System.out.println("Received: " + antReply.getSender().getLocalName() + " - " + ant.getTabuList());
+                    LOG.info("Received: {} - {}", antReply.getSender().getLocalName(), ant.getTabuList());
                     if (ant.getTabuList().size() == graph.getNodes().size())
                         ants.add(ant);
 
@@ -197,7 +201,7 @@ public class AntManagerAgent extends Agent {
 
                 if (isAllAntsWithTabuListFull && graph.getNodes().size() == ants.size()) {
                     ants.forEach(ant -> {
-                        System.out.println(ant.pathFound());
+                        LOG.info(ant.pathFound());
                     });
 
                     graph.updateShortestPath(ants.stream().toList());
@@ -221,10 +225,10 @@ public class AntManagerAgent extends Agent {
                     }
 
                     if (NC >= NC_MAX - 1 || isAllAntsWithSamePath) {
-                        System.out.println("Shortest path found:");
-                        System.out.println(graph.getShortestPath().toString());
-                        System.out.println("Shortest distance found:");
-                        System.out.println(graph.getShortestPathDistance());
+                        LOG.info("Shortest path found:");
+                        LOG.info(graph.getShortestPath().toString());
+                        LOG.info("Shortest distance found:");
+                        LOG.info(String.valueOf(graph.getShortestPathDistance()));
                     }
 
                     ants.forEach(ant -> {
