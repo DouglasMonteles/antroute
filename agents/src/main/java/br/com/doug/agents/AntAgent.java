@@ -5,12 +5,8 @@ import br.com.doug.ant.Graph;
 import br.com.doug.ant.Node;
 import br.com.doug.ant.impl.AntDensityAlgorithm;
 import br.com.doug.exceptions.AgentException;
-import jade.content.lang.Codec;
-import jade.content.onto.OntologyException;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.SequentialBehaviour;
-import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
@@ -54,15 +50,6 @@ public class AntAgent extends Agent {
         this.ant = new Ant(antLabel, antInitialNode);
         this.graph = (Graph) args[2];
 
-//        SequentialBehaviour antMoveCharacteristics = new SequentialBehaviour();
-//        antMoveCharacteristics.addSubBehaviour(new ChooseTownToGo());
-//        antMoveCharacteristics.addSubBehaviour(new CalcAvailableNodes());
-//        antMoveCharacteristics.addSubBehaviour(new MoveAntOnGraphBehaviour());
-//        antMoveCharacteristics.addSubBehaviour(new LaysTrailOnEdgeBehaviour());
-//        antMoveCharacteristics.addSubBehaviour(new UpdateTabuListBehaviour());
-//        antMoveCharacteristics.addSubBehaviour(new UpdateNodeAndPathBehaviour());
-
-//        addBehaviour(antMoveCharacteristics);
         addBehaviour(new ReceiveRequestBehaviour());
     }
 
@@ -145,117 +132,6 @@ public class AntAgent extends Agent {
             } else {
                 block();
             }
-        }
-    }
-
-    /*
-    * It chooses the town to go to with a probability that is a function of the town distance and
-    * of the amount of trail present on the connecting edge.
-    * */
-    private class ChooseTownToGo extends SimpleBehaviour {
-
-        private boolean isDone = false;
-
-        @Override
-        public void action() {
-
-            isDone = true;
-        }
-
-        @Override
-        public boolean done() {
-            return isDone;
-        }
-    }
-
-    /*
-     *
-     * */
-    private class CalcAvailableNodes extends SimpleBehaviour {
-
-        private boolean isDone = false;
-
-        @Override
-        public void action() {
-
-            isDone = true;
-        }
-
-        @Override
-        public boolean done() {
-            return isDone;
-        }
-    }
-
-    /*
-     *
-     * */
-    private class MoveAntOnGraphBehaviour extends SimpleBehaviour {
-
-        private boolean isDone = false;
-
-        @Override
-        public void action() {
-
-        }
-
-        @Override
-        public boolean done() {
-            return isDone;
-        }
-    }
-
-    /*
-    * When going from town i to town j it lays a substance, called trail, on edge (i,j).
-    * */
-    private class LaysTrailOnEdgeBehaviour extends SimpleBehaviour {
-
-        @Override
-        public void action() {
-
-        }
-
-        @Override
-        public boolean done() {
-            return false;
-        }
-    }
-
-    /*
-    * To force ants to make legal tours, transitions to already visited towns are inhibited till a
-    * tour is completed (see the tabu list in the following).
-    * */
-    private class UpdateTabuListBehaviour extends SimpleBehaviour {
-
-        @Override
-        public void action() {
-
-        }
-
-        @Override
-        public boolean done() {
-            return false;
-        }
-    }
-
-    /*
-     * To force ants to make legal tours, transitions to already visited towns are inhibited till a
-     * tour is completed (see the tabu list in the following).
-     * */
-    private class UpdateNodeAndPathBehaviour extends SimpleBehaviour {
-
-        private boolean isDone = false;
-
-        @Override
-        public void action() {
-
-
-            isDone = true;
-        }
-
-        @Override
-        public boolean done() {
-            return isDone;
         }
     }
 
