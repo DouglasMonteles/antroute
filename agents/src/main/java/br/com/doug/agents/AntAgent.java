@@ -1,5 +1,8 @@
 package br.com.doug.agents;
 
+import br.com.doug.agents.builders.AgentMessageBuilder;
+import br.com.doug.agents.utils.AgentUtils;
+import br.com.doug.agents.utils.Performative;
 import br.com.doug.ant.Ant;
 import br.com.doug.ant.Graph;
 import br.com.doug.ant.Node;
@@ -65,7 +68,7 @@ public class AntAgent extends Agent {
 
         @Override
         public void action() {
-            MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(Peformative.ANT_REQUEST);
+            MessageTemplate messageTemplate = MessageTemplate.MatchPerformative(Performative.ANT_REQUEST);
             ACLMessage request = receive(messageTemplate);
 
             if (request != null) {
@@ -107,7 +110,7 @@ public class AntAgent extends Agent {
                         ant.getPathFound().add(nextNode);
 
                         ACLMessage response = new AgentMessageBuilder(request.createReply())
-                            .setPerformative(Peformative.ANT_RESPONSE_OK)
+                            .setPerformative(Performative.ANT_RESPONSE_OK)
                             .setContentObject(ant)
                             .build();
 

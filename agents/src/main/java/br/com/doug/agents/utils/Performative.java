@@ -1,6 +1,6 @@
-package br.com.doug.agents;
+package br.com.doug.agents.utils;
 
-public class Peformative {
+public class Performative {
     
     public static final int ANT_REQUEST = 100;
 

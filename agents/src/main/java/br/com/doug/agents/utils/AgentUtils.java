@@ -1,4 +1,4 @@
-package br.com.doug.agents;
+package br.com.doug.agents.utils;
 
 import br.com.doug.exceptions.AgentException;
 import jade.lang.acl.ACLMessage;

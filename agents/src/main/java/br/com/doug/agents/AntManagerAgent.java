@@ -1,5 +1,7 @@
 package br.com.doug.agents;
 
+import br.com.doug.agents.utils.AgentUtils;
+import br.com.doug.agents.utils.Performative;
 import br.com.doug.ant.Ant;
 import br.com.doug.ant.Graph;
 import br.com.doug.ant.Node;
@@ -12,7 +14,6 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.lang.acl.UnreadableException;
 import jade.wrapper.StaleProxyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +40,14 @@ public class AntManagerAgent extends Agent {
     private final Node nodeA = new Node("A", new Node.Position(10f, 10f));
     private final Node nodeB = new Node("B", new Node.Position(20f, 20f));
     private final Node nodeC = new Node("C", new Node.Position(30f, 10f));
+    private final Node nodeD = new Node("D", new Node.Position(15f, 10f));
 
     Ant ant1 = new Ant("AntA", nodeA);
     Ant ant2 = new Ant("AntB", nodeB);
     Ant ant3 = new Ant("AntC", nodeC);
+    Ant ant4 = new Ant("AntD", nodeD);
 
-    List<Ant> ants = List.of(ant1, ant2, ant3);
+    List<Ant> ants = List.of(ant1, ant2, ant3, ant4);
 
     AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm(graph, ants);
 
@@ -54,7 +57,10 @@ public class AntManagerAgent extends Agent {
     protected void setup() {
         graph.addEdge(nodeA, nodeB);
         graph.addEdge(nodeA, nodeC);
+        graph.addEdge(nodeA, nodeD);
         graph.addEdge(nodeB, nodeC);
+        graph.addEdge(nodeB, nodeD);
+        graph.addEdge(nodeC, nodeD);
 
         addBehaviour(new InitializeAntBehaviour());
         addBehaviour(new AntResponseBehaviour());
@@ -89,12 +95,12 @@ public class AntManagerAgent extends Agent {
                     // for every k-th ant on town i still not moved
                     // Send message to move all ants in that node
 
-                    ACLMessage message = new ACLMessage(Peformative.ANT_REQUEST);
+                    ACLMessage message = new ACLMessage(Performative.ANT_REQUEST);
 
                     try {
-                        message.addReceiver(getAID("AntA"));
-                        message.addReceiver(getAID("AntB"));
-                        message.addReceiver(getAID("AntC"));
+                        ants.forEach(it -> {
+                            message.addReceiver(getAID(it.getLabel()));
+                        });
                         message.setContentObject(node);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -115,7 +121,7 @@ public class AntManagerAgent extends Agent {
 
         @Override
         public void action() {
-            MessageTemplate replyTemplate = MessageTemplate.MatchPerformative(Peformative.ANT_RESPONSE_OK);
+            MessageTemplate replyTemplate = MessageTemplate.MatchPerformative(Performative.ANT_RESPONSE_OK);
             ACLMessage antReply = receive(replyTemplate);
 
             if (antReply != null) {
