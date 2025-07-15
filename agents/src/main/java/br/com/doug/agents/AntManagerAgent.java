@@ -1,5 +1,6 @@
 package br.com.doug.agents;
 
+import br.com.doug.agents.builders.AgentMessageBuilder;
 import br.com.doug.agents.utils.AgentUtils;
 import br.com.doug.agents.utils.Performative;
 import br.com.doug.ant.Ant;
@@ -127,6 +128,11 @@ public class AntManagerAgent extends Agent {
             if (antReply != null) {
                 Ant antObj = AgentUtils.getContentObject(antReply, Ant.class);
                 LOG.info("Received: {} - {}", antReply.getSender().getLocalName(), antObj.getTabuList());
+
+                send(new AgentMessageBuilder(Performative.HTTP_CLIENT_ANT_REQUEST)
+                        .setReceiver(getAID("http"))
+                        .setContentObject(antObj)
+                        .build());
 
                 if (antObj.getTabuList().size() == graph.getNodes().size())
                     ants.add(antObj);

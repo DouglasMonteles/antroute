@@ -1,6 +1,7 @@
 package br.com.doug;
 
 import br.com.doug.agents.AntManagerAgent;
+import br.com.doug.agents.HttpAgent;
 import br.com.doug.agents.ServerAgent;
 import br.com.doug.exceptions.AgentException;
 import br.com.doug.services.JadeContainerService;
@@ -16,10 +17,12 @@ public class AgentApplication {
             var rmaAgent = jadeContainerService.createAgent("rma", "jade.tools.rma.rma", null);
             var antManagerAgent = jadeContainerService.createAgent("antManagerAgent", AntManagerAgent.class.getName(), null);
             var serverAgent = jadeContainerService.createAgent("server", ServerAgent.class.getName(), null);
+            var httpAgent = jadeContainerService.createAgent("http", HttpAgent.class.getName(), null);
 
             rmaAgent.start();
             antManagerAgent.start();
             serverAgent.start();
+            httpAgent.start();
         } catch (StaleProxyException e) {
             throw new AgentException(e);
         }
