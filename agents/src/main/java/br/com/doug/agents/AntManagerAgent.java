@@ -19,7 +19,6 @@ import jade.wrapper.StaleProxyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.Serial;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +28,7 @@ import static br.com.doug.ant.AntAlgorithm.NC_MAX;
 
 public class AntManagerAgent extends Agent {
 
-    private static Logger LOG = LoggerFactory.getLogger(AntManagerAgent.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AntManagerAgent.class);
 
     @Serial
     private static final long serialVersionUID = -5837718391546224594L;
@@ -95,19 +94,14 @@ public class AntManagerAgent extends Agent {
                 graph.getNodes().forEach(node -> {
                     // for every k-th ant on town i still not moved
                     // Send message to move all ants in that node
-
-                    ACLMessage message = new ACLMessage(Performative.ANT_REQUEST);
-
-                    try {
-                        ants.forEach(it -> {
-                            message.addReceiver(getAID(it.getLabel()));
-                        });
-                        message.setContentObject(node);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    send(message);
+                    send(new AgentMessageBuilder(Performative.ANT_REQUEST)
+                            .setReceivers(ants.stream()
+                                    .map(Ant::getLabel)
+                                    .map(AntManagerAgent.this::getAID)
+                                    .toList())
+                            .setContentObject(node)
+                            .build()
+                    );
                 });
             }
         }

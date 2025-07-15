@@ -109,13 +109,12 @@ public class AntAgent extends Agent {
                         // Update path found
                         ant.getPathFound().add(nextNode);
 
-                        ACLMessage response = new AgentMessageBuilder(request.createReply())
-                            .setPerformative(Performative.ANT_RESPONSE_OK)
-                            .setContentObject(ant)
-                            .build();
-
                         LOG.info("Send: {} - {}", getAgent().getLocalName(), ant.getTabuList());
-                        send(response);
+                        send(new AgentMessageBuilder(request.createReply())
+                                .setPerformative(Performative.ANT_RESPONSE_OK)
+                                .setContentObject(ant)
+                                .build());
+
                         step = 1;
                 }
             } else {
