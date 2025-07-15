@@ -2,7 +2,10 @@ package br.com.doug.ants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,8 +15,12 @@ public class AntController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AntController.class);
 
-    public ResponseEntity<Void> receiveAntInfoFromAgent(AntDTO antDTO) {
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
+    public ResponseEntity<Void> receiveAntInfoFromAgent(@RequestBody AntDTO antDTO) {
         LOG.info("Received: {}", antDTO);
+        simpMessagingTemplate.convertAndSend("/api/topic/ants/updates", antDTO);
         return ResponseEntity.ok().build();
     }
 
