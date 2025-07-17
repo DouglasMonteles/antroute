@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     public static final String[] ENDPOINTS = {
-            "/ant-updates",
+            "/ant-route-updates",
     };
 
     private final String[] ALLOWED_ORIGINS = {
@@ -20,11 +20,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     };
 
     private final String[] DESTINATION_PREFIXES = {
-            "/api/topic",
+            "/topic",
     };
 
     private final String[] PREFIXES = {
-            "/api/app",
+            "/app",
     };
 
     @Override

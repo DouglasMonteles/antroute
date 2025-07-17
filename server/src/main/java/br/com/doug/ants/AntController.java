@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +19,10 @@ public class AntController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    @PostMapping
     public ResponseEntity<Void> receiveAntInfoFromAgent(@RequestBody AntDTO antDTO) {
         LOG.info("Received: {}", antDTO);
-        simpMessagingTemplate.convertAndSend("/api/topic/ants/updates", antDTO);
+        simpMessagingTemplate.convertAndSend("/topic/ants/updates", antDTO);
         return ResponseEntity.ok().build();
     }
 

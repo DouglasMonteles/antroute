@@ -3,6 +3,7 @@ package br.com.doug.agents;
 import br.com.doug.agents.utils.AgentUtils;
 import br.com.doug.agents.utils.Performative;
 import br.com.doug.ant.Ant;
+import br.com.doug.http.HttpClient;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -39,6 +40,20 @@ public class HttpAgent extends Agent {
             if (antReply != null) {
                 Ant ant = AgentUtils.getContentObject(antReply, Ant.class);
                 LOG.info("Send ant info to server api. Ant: {}", ant);
+
+                int responseCode;
+
+                do {
+                    responseCode = HttpClient.post("http://localhost:8080/ants", ant);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if (responseCode != 200) {
+                        LOG.info("Trying again...");
+                    }
+                } while (responseCode != 200);
             } else {
                 block();
             }
