@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Frontend ###
+/frontend/src/main/resources/web/node_modules
+/frontend/src/main/resources/web/dist
+/frontend/src/main/resources/web/node
+/frontend/src/main/resources/web/.angular
+/frontend/src/main/resources/web/.vscode
+
