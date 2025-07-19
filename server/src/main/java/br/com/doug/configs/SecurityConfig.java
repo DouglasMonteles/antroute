@@ -19,6 +19,10 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final String[] ENDPOINTS = {
+            "/ants"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -41,7 +45,7 @@ public class SecurityConfig {
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-        List.of(WebSocketConfig.ENDPOINTS).forEach(it -> {
+        List.of(ENDPOINTS).forEach(it -> {
             source.registerCorsConfiguration(it + "/**", configuration);
         });
 
