@@ -3,11 +3,13 @@ import { Message } from 'stompjs';
 import { JsonPipe } from '@angular/common';
 import { environment } from 'environments/environment';
 import { WebSocketService } from 'app/services/web-socket.service';
+import { AntGraph } from 'app/components/ant-graph/ant-graph';
 
 @Component({
   selector: 'app-home',
   imports: [
     JsonPipe,
+    AntGraph,
   ],
   templateUrl: './home.html',
   styleUrl: './home.css'
