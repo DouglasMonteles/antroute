@@ -44,7 +44,7 @@ public class HttpAgent extends Agent {
                 int responseCode;
 
                 do {
-                    responseCode = HttpClient.post("http://localhost:8080/ants", ant);
+                    responseCode = HttpClient.post("http://localhost:8080/api/ants", ant);
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {

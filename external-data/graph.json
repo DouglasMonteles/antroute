@@ -1,0 +1,23 @@
+[
+  {
+    "node": {
+      "name": "A",
+      "position": {
+        "x": 10,
+        "y": 20
+      }
+    },
+    "edges": ["A"]
+  },
+
+  {
+    "node":  {
+      "name": "B",
+      "position": {
+        "x": 10,
+        "y": 20
+      }
+    },
+    "edges": ["B"]
+  }
+]
