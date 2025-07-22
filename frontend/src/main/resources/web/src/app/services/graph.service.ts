@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import cytoscape from 'cytoscape'; 
 import { randNumber } from "app/utils/RandomUtils";
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from 'environments/environment';
+import GraphNode from 'app/models/GraphNode';
 
 interface GraphEdge {
   source: string;
@@ -11,6 +15,14 @@ interface GraphEdge {
   providedIn: 'root'
 })
 export class GraphService {
+
+  constructor(
+    private _httpClient: HttpClient
+  ) {}
+
+  public graphNodes(): Observable<GraphNode[]> {
+    return this._httpClient.get<GraphNode[]>(`http://localhost:8080/graph`);
+  }
   
   public generateGraph(container: HTMLElement | null, nodes: string[], connections: GraphEdge[]): void {
     cytoscape({

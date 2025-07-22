@@ -21,7 +21,7 @@ export class Home {
   constructor(
     private _wsService: WebSocketService,
   ) {
-    const url = `${environment.baseUrl}/ant-route-updates`;
+    const url = `${environment.wsUrl}/ant-route-updates`;
     const headers = {};
 
     this._wsService.handleConnection(url, headers, {

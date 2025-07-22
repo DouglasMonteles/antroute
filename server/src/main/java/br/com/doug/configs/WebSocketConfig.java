@@ -10,14 +10,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    public static final String[] WS_ENDPOINTS = {
+    private final String[] WS_ENDPOINTS = {
             "/ant-route-updates",
-    };
-
-    private final String[] ALLOWED_ORIGINS = {
-            "http://localhost:8080",
-            "ws://localhost:8080",
-            "http://localhost:4200"
     };
 
     private final String[] DESTINATION_PREFIXES = {

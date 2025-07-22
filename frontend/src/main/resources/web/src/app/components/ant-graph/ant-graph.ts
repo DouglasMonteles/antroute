@@ -9,13 +9,22 @@ import { GraphService } from 'app/services/graph.service';
 })
 export class AntGraph implements OnInit {
 
-  constructor(private _graphService: GraphService) {
-    
-  }
+  constructor(
+    private _graphService: GraphService
+  ) {}
 
   ngOnInit(): void {
+    this.getNodes();
     const container = document.getElementById("cy");
     this._graphService.generateGraph(container, ["a", "b", "c", "d"], [{source: "a", target: "b"}, {source: "a", target: "c"}, {source: "a", target: "d"}, {source: "b", target: "d"}]);
+  }
+
+  public getNodes(): void {
+    this._graphService.graphNodes().subscribe({
+      next: (data) => {
+        console.log(data)
+      }
+    });
   }
 
 }
