@@ -65,7 +65,7 @@
                         <goals><goal>npm</goal></goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>run build -- --configuration production</arguments>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
                 </executions>

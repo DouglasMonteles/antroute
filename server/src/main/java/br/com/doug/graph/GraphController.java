@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/graph")
+@RequestMapping("/api/graph")
 public class GraphController {
 
     private final GraphService graphService;

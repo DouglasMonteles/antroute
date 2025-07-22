@@ -12,15 +12,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig implements WebMvcConfigurer {
 
     public static final String[] ENDPOINTS = {
-            "/ants",
-            "/graph",
+            "/api/ants",
+            "/api/graph",
     };
 
     public static final String[] ALLOWED_ORIGINS = {

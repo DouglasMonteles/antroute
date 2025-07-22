@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/ants")
+@RequestMapping("/api/ants")
 public class AntController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AntController.class);

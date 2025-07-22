@@ -21,7 +21,7 @@ export class GraphService {
   ) {}
 
   public graphNodes(): Observable<GraphNode[]> {
-    return this._httpClient.get<GraphNode[]>(`http://localhost:8080/graph`);
+    return this._httpClient.get<GraphNode[]>(`${environment.baseUrl}/graph`);
   }
   
   public generateGraph(container: HTMLElement | null, nodes: string[], connections: GraphEdge[]): void {
