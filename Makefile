@@ -16,7 +16,7 @@ up:
 
 build-up:
 	@echo "Building and running project"
-	make build up
+	make clean build up
 
 test:
 	@echo "Running tests"

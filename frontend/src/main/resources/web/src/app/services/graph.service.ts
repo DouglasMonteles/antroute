@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
 import GraphNode from 'app/models/GraphNode';
 
-interface GraphEdge {
+export interface GraphEdge {
   source: string;
   target: string;
 }

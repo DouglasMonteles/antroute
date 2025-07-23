@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GraphService } from 'app/services/graph.service';
+import { GraphEdge, GraphService } from 'app/services/graph.service';
 
 @Component({
   selector: 'app-ant-graph',
@@ -13,18 +13,32 @@ export class AntGraph implements OnInit {
     private _graphService: GraphService
   ) {}
 
-  ngOnInit(): void {
-    this.getNodes();
+  ngOnInit() {
     const container = document.getElementById("cy");
-    this._graphService.generateGraph(container, ["a", "b", "c", "d"], [{source: "a", target: "b"}, {source: "a", target: "c"}, {source: "a", target: "d"}, {source: "b", target: "d"}]);
+    const nodes: string[] = [];
+    const edges: GraphEdge[] = [];
+
+    this._graphService.graphNodes().subscribe({
+      next: (graphNodes) => {
+        graphNodes.forEach(graphNode => {
+          const { name } = graphNode.node;
+          nodes.push(name);
+          
+          graphNode.edges.forEach(edge => {
+            edges.push({
+              source: name,
+              target: edge,
+            });
+          });
+        });
+
+        this._graphService.generateGraph(container, nodes, edges);
+      }
+    });
   }
 
   public getNodes(): void {
-    this._graphService.graphNodes().subscribe({
-      next: (data) => {
-        console.log(data)
-      }
-    });
+    
   }
 
 }
