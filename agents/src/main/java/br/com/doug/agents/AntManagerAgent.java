@@ -8,6 +8,7 @@ import br.com.doug.ant.Graph;
 import br.com.doug.ant.Node;
 import br.com.doug.ant.impl.AntDensityAlgorithm;
 import br.com.doug.exceptions.AgentException;
+import br.com.doug.graph.GraphService;
 import br.com.doug.services.JadeContainerService;
 import br.com.doug.services.impl.JadeContainerServiceImpl;
 import jade.core.Agent;
@@ -18,8 +19,10 @@ import jade.lang.acl.MessageTemplate;
 import jade.wrapper.StaleProxyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serial;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,32 +38,38 @@ public class AntManagerAgent extends Agent {
     
     private final JadeContainerService jadeContainerService = JadeContainerServiceImpl.INSTANCE;
 
-    private final Graph graph = new Graph();
+    private final Graph graph;
 
-    private final Node nodeA = new Node("A", new Node.Position(10f, 10f));
-    private final Node nodeB = new Node("B", new Node.Position(20f, 20f));
-    private final Node nodeC = new Node("C", new Node.Position(30f, 10f));
-    private final Node nodeD = new Node("D", new Node.Position(15f, 10f));
+//    private final Node nodeA = new Node("A", new Node.Position(10f, 10f));
+//    private final Node nodeB = new Node("B", new Node.Position(20f, 20f));
+//    private final Node nodeC = new Node("C", new Node.Position(30f, 10f));
+//    private final Node nodeD = new Node("D", new Node.Position(15f, 10f));
 
-    Ant ant1 = new Ant("AntA", nodeA);
-    Ant ant2 = new Ant("AntB", nodeB);
-    Ant ant3 = new Ant("AntC", nodeC);
-    Ant ant4 = new Ant("AntD", nodeD);
+//    Ant ant1 = new Ant("AntA", nodeA);
+//    Ant ant2 = new Ant("AntB", nodeB);
+//    Ant ant3 = new Ant("AntC", nodeC);
+//    Ant ant4 = new Ant("AntD", nodeD);
 
-    List<Ant> ants = List.of(ant1, ant2, ant3, ant4);
+    private final List<Ant> ants = new ArrayList<>();
 
-    AntDensityAlgorithm antDensityAlgorithm = new AntDensityAlgorithm(graph, ants);
+    private final AntDensityAlgorithm antDensityAlgorithm;
 
     private int NC = 0;
 
+    public AntManagerAgent() {
+        this.graph = Graph.buildGraphFromJsonFile();
+        this.graph.getNodes().forEach(node -> ants.add(new Ant("Ant" + node.getName(), node)));
+        this.antDensityAlgorithm = new AntDensityAlgorithm(graph, ants);
+    }
+
     @Override
     protected void setup() {
-        graph.addEdge(nodeA, nodeB);
-        graph.addEdge(nodeA, nodeC);
-        graph.addEdge(nodeA, nodeD);
-        graph.addEdge(nodeB, nodeC);
-        graph.addEdge(nodeB, nodeD);
-        graph.addEdge(nodeC, nodeD);
+//        graph.addEdge(nodeA, nodeB);
+//        graph.addEdge(nodeA, nodeC);
+//        graph.addEdge(nodeA, nodeD);
+//        graph.addEdge(nodeB, nodeC);
+//        graph.addEdge(nodeB, nodeD);
+//        graph.addEdge(nodeC, nodeD);
 
         addBehaviour(new InitializeAntBehaviour());
         addBehaviour(new AntResponseBehaviour());

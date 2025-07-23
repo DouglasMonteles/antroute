@@ -1,9 +1,13 @@
 package br.com.doug.ant;
 
 import br.com.doug.ant.impl.AntDensityAlgorithm;
+import br.com.doug.graph.GraphNodeDTO;
+import br.com.doug.utils.ObjectConversorUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.Data;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 public class Graph {
@@ -59,6 +63,27 @@ public class Graph {
 
             edge.setIntensityOfTrail(intensityOfTrailUpdated);
         }
+    }
+
+    public static Graph buildGraphFromJsonFile() {
+        Graph graph = new Graph();
+
+        List<GraphNodeDTO> graphJson = ObjectConversorUtils.convertJsonInObject("graph.json", new TypeReference<>() {
+        });
+
+        Map<String, Node> nodeMap = graphJson
+                .stream()
+                .map(graphNode -> new Node(graphNode.getNode().getName(), new Node.Position(graphNode.getNode().getPosition().getX(), graphNode.getNode().getPosition().getY())))
+                .collect(Collectors.toMap(Node::getName, node -> node));
+
+        graphJson.forEach(graphNode -> {
+            Node initalNode = nodeMap.get(graphNode.getNode().getName());
+            List<Node> edges = graphNode.getEdges().stream().map(nodeMap::get).toList();
+
+            edges.forEach(edge -> graph.addEdge(initalNode, edge));
+        });
+
+        return graph;
     }
 
     private void calcDefaultParamsForEdge(Edge edge) {

@@ -1,6 +1,7 @@
 package br.com.doug.graph;
 
 import br.com.doug.utils.ObjectConversorUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,8 @@ import java.util.List;
 public class GraphService {
 
     public List<GraphNodeDTO> getGraph() {
-        return ObjectConversorUtils.convertJsonInObject("graph.json");
+        return ObjectConversorUtils.convertJsonInObject("graph.json", new TypeReference<List<GraphNodeDTO>>() {
+        });
     }
 
 
