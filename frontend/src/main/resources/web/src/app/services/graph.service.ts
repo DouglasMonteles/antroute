@@ -4,7 +4,7 @@ import { randNumber } from "app/utils/RandomUtils";
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
-import GraphNode from 'app/models/GraphNode';
+import { GraphNode } from 'app/models/GraphNode';
 
 export interface GraphEdge {
   source: string;
@@ -24,8 +24,8 @@ export class GraphService {
     return this._httpClient.get<GraphNode[]>(`${environment.baseUrl}/graph`);
   }
   
-  public generateGraph(container: HTMLElement | null, nodes: string[], connections: GraphEdge[]): void {
-    cytoscape({
+  public generateGraph(container: HTMLElement | null, nodes: string[], connections: GraphEdge[]): cytoscape.Core {
+    return cytoscape({
       container: container,
 
       elements: this._handleElements(nodes, connections),
@@ -72,6 +72,7 @@ export class GraphService {
       return nodeDef;
     });
 
+    console.log("graphNodes")
     console.log(graphNodes)
 
     const graphEdges: cytoscape.EdgeDefinition[] = connections.map(edge => {
