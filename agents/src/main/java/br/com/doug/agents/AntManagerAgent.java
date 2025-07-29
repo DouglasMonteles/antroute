@@ -9,6 +9,7 @@ import br.com.doug.ant.Node;
 import br.com.doug.ant.impl.AntDensityAlgorithm;
 import br.com.doug.exceptions.AgentException;
 import br.com.doug.graph.GraphService;
+import br.com.doug.http.HttpClient;
 import br.com.doug.services.JadeContainerService;
 import br.com.doug.services.impl.JadeContainerServiceImpl;
 import jade.core.Agent;
@@ -132,10 +133,10 @@ public class AntManagerAgent extends Agent {
                 Ant antObj = AgentUtils.getContentObject(antReply, Ant.class);
                 LOG.info("Received: {} - {}", antReply.getSender().getLocalName(), antObj.getTabuList());
 
-                send(new AgentMessageBuilder(Performative.HTTP_CLIENT_ANT_REQUEST)
-                        .setReceiver(getAID("http"))
-                        .setContentObject(antObj)
-                        .build());
+//                send(new AgentMessageBuilder(Performative.HTTP_CLIENT_ANT_REQUEST)
+//                        .setReceiver(getAID("http"))
+//                        .setContentObject(antObj)
+//                        .build());
 
                 if (antObj.getTabuList().size() == graph.getNodes().size())
                     ants.add(antObj);
@@ -145,6 +146,12 @@ public class AntManagerAgent extends Agent {
                 if (isAllAntsWithTabuListFull && graph.getNodes().size() == ants.size()) {
                     ants.forEach(ant -> {
                         LOG.info(ant.pathFound());
+
+                        LOG.info("Send to http agent");
+                        send(new AgentMessageBuilder(Performative.HTTP_CLIENT_ANT_REQUEST)
+                                .setReceiver(getAID("http"))
+                                .setContentObject(ant)
+                                .build());
                     });
 
                     graph.updateShortestPath(ants.stream().toList());

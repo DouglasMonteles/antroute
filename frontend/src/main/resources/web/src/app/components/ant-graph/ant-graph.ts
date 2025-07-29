@@ -1,10 +1,12 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AntInfo } from 'app/models/AntInfo';
+import { Node } from 'app/models/GraphNode';
 import { GraphEdge, GraphService } from 'app/services/graph.service';
 import { WebSocketService } from 'app/services/web-socket.service';
 import { randHexColor } from 'app/utils/RandomUtils';
 import cytoscape from 'cytoscape';
 import { environment } from 'environments/environment.development';
+import { concatMap, Subject, timer } from 'rxjs';
 import { Message } from 'stompjs';
 
 @Component({
@@ -14,6 +16,10 @@ import { Message } from 'stompjs';
   styleUrl: './ant-graph.css'
 })
 export class AntGraph implements OnInit {
+
+  private ANT_MOVE_DURATION: number = 15000;
+
+  private cy: cytoscape.Core | null = null;
 
   constructor(
     private _graphService: GraphService,
@@ -39,7 +45,7 @@ export class AntGraph implements OnInit {
           });
         });
 
-        const cy = this._graphService.generateGraph(container, nodes, edges);
+        this.cy = this._graphService.generateGraph(container, nodes, edges);
 
         const url = `${environment.wsUrl}/ant-route-updates`;
         const headers = {};
@@ -52,22 +58,17 @@ export class AntGraph implements OnInit {
             const {
               label,
               initialNode,
-              nextNode,
+              pathFound,
             } = body;
 
-            if (!nextNode) return;
+            if (this.cy == null) return;
 
-            console.log("NODES:")
-            console.log(cy.nodes().map(it => it.id()))
+            const graphInitialNode = this.cy.getElementById(`${initialNode.name}`);
 
-            const initialNodeProps = cy.getElementById(initialNode.name);
+            const ant = this.cy.getElementById(`${label}`);
 
-            if (cy.getElementById(`${label}`).length === 0) {
-              console.log("INSERINDO");
-              
-              const { x, y } = initialNodeProps.position();
-
-              cy.add({
+            if (ant.length <= 0) {
+              const antNode = this.cy.add({
                 group: 'nodes',
                 data: {
                   id: `${label}`,
@@ -79,26 +80,45 @@ export class AntGraph implements OnInit {
                   "background-color": randHexColor()
                 },
                 position: {
-                  x,
-                  y,
-                },
+                  x: graphInitialNode.position().x,
+                  y: graphInitialNode.position().y,
+                }
               });
-            } else {
-              console.log("ATUALIZANDO");
-              
-              const ant = cy.getElementById(`${label}`);
-              const node = cy.getElementById(nextNode.name);
-              const { x, y } = node.position();
 
-              ant.position({
-                x,
-                y,
-              });
+              this._moveAnt(antNode, pathFound);
+            } else {
+              this._moveAnt(ant, pathFound);
             }
+
           },
         }, (error) => {
           console.log("Web socket error:");
           console.log(error);
+        });
+      }
+    });
+  }
+
+  private _moveAnt(antNode: cytoscape.CollectionReturnValue, path: Node[]): void {
+    path.forEach((node, index) => {
+      const targetNode = this.cy?.getElementById(`${node.name}`);
+
+      if (targetNode) {
+        // Animation for ant move in the line for x seconds
+        antNode.animate({
+          position: {
+            x: targetNode.position().x,
+            y: targetNode.position().y,
+          },
+          // In the fist node path, ant already starts in a node position, don't need to wait for 15s
+          duration: index == 0 ? 0 : this.ANT_MOVE_DURATION,
+          easing: "linear",
+        });
+
+        // Update the position of ant at each target node from the path founded.
+        antNode.position({
+          x: targetNode.position().x,
+          y: targetNode.position().y,
         });
       }
     });
