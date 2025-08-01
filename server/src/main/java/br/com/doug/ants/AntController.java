@@ -19,10 +19,18 @@ public class AntController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+   private final AntObserverService antService = AntObserverService.INSTANCE;
+
     @PostMapping
     public ResponseEntity<Void> receiveAntInfoFromAgent(@RequestBody AntDTO antDTO) {
         LOG.info("Received: {}", antDTO);
         simpMessagingTemplate.convertAndSend("/topic/ants/updates", antDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/antQuantity")
+    public ResponseEntity<Void> defineAntQuantityForSimulation(@RequestBody AntSimulationDataDTO antSimulationDataDTO) {
+        antService.initSimulation(antSimulationDataDTO);
         return ResponseEntity.ok().build();
     }
 

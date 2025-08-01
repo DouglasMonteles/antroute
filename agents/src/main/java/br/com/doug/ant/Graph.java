@@ -1,6 +1,7 @@
 package br.com.doug.ant;
 
 import br.com.doug.ant.impl.AntDensityAlgorithm;
+import br.com.doug.ants.AntSimulationDataDTO;
 import br.com.doug.graph.GraphNodeDTO;
 import br.com.doug.utils.ObjectConversorUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -82,6 +83,27 @@ public class Graph {
 
             edges.forEach(edge -> graph.addEdge(initalNode, edge));
         });
+
+        return graph;
+    }
+
+    public static Graph buildGraphFromObject(AntSimulationDataDTO antSimulationDataDTO) {
+        Graph graph = new Graph();
+
+        List<Node> nodes = new ArrayList<>();
+
+        for (int i = 0; i < antSimulationDataDTO.getAntQuantity(); i++) {
+            nodes.add(new Node("Node" + (i+1), new Node.Position(10f, 10f)));
+        }
+
+        for (int i = 0; i < nodes.size(); i++) {
+            Node initialNode = nodes.get(i);
+
+            for (int j = i + 1; j < nodes.size(); j++) {
+                Node edgeNode = nodes.get(j);
+                graph.addEdge(initialNode, edgeNode);
+            }
+        }
 
         return graph;
     }
