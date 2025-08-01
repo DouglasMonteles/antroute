@@ -1,0 +1,41 @@
+<form [formGroup]="antSimulationForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-header class="mx-auto">
+      <mat-card-title>
+        Informe os Dados de Simulação
+      </mat-card-title>
+    </mat-card-header>
+
+    <br />
+
+    <mat-card-content>
+      <div class="row">
+          <div class="col">
+            <div>
+              <label>
+                Quantidade de Formigas:
+              </label>
+              <label>
+                {{antSimulationForm.controls['antQuantity'].value}}
+              </label>
+            </div>
+
+            <mat-slider 
+              class="full-width"
+              [max]="100" 
+              [min]="1" 
+              [discrete]="thumbLabel" 
+            >
+              <input matSliderThumb formControlName="antQuantity">
+            </mat-slider>
+          </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button class="ml-auto mr-auto" matButton="elevated" color="primary" type="submit">
+        Iniciar simulação
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>
