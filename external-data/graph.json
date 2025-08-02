@@ -1,1 +1,1 @@
-[{"node":{"name":"N1","position":{"x":152.81038,"y":566.7011}},"edges":["N2","N3"]},{"node":{"name":"N2","position":{"x":653.58795,"y":75.1885}},"edges":["N3"]},{"node":{"name":"N3","position":{"x":766.69135,"y":997.85394}},"edges":[]}]
+[{"node":{"name":"N1","position":{"x":297.7706,"y":15.636642}},"edges":["N2","N3"]},{"node":{"name":"N2","position":{"x":725.6832,"y":118.33321}},"edges":["N3"]},{"node":{"name":"N3","position":{"x":339.97992,"y":790.1096}},"edges":[]}]

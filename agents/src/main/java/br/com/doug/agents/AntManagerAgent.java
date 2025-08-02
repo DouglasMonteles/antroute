@@ -56,6 +56,10 @@ public class AntManagerAgent extends Agent implements AntObserver {
 
     @Override
     public void update(AntSimulationDataDTO antSimulationDataDTO) {
+        NC = 0;
+        if (graph != null)
+            graph.getEdges().clear();
+
         LOG.info("Received simulation data: {}", antSimulationDataDTO);
 
         this.graph = Graph.buildGraph(antSimulationDataDTO);
@@ -180,6 +184,8 @@ public class AntManagerAgent extends Agent implements AntObserver {
 //                        graph.getEdges().clear();
 //                        graph = null;
 //                        return;
+                        ants.clear();
+                        return;
                     }
 
                     ants.forEach(ant -> {
