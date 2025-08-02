@@ -28,8 +28,8 @@ public class AntController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/antQuantity")
-    public ResponseEntity<Void> defineAntQuantityForSimulation(@RequestBody AntSimulationDataDTO antSimulationDataDTO) {
+    @PostMapping("/simulation")
+    public ResponseEntity<Void> initSimulation(@RequestBody AntSimulationDataDTO antSimulationDataDTO) {
         antService.initSimulation(antSimulationDataDTO);
         return ResponseEntity.ok().build();
     }

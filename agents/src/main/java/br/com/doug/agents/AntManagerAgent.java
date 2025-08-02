@@ -175,6 +175,11 @@ public class AntManagerAgent extends Agent implements AntObserver {
                         LOG.info(graph.getShortestPath().toString());
                         LOG.info("Shortest distance found:");
                         LOG.info(String.valueOf(graph.getShortestPathDistance()));
+
+//                        graph.getNodes().clear();
+//                        graph.getEdges().clear();
+//                        graph = null;
+//                        return;
                     }
 
                     ants.forEach(ant -> {

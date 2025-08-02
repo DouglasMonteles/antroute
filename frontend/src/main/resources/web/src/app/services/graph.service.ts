@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'environments/environment';
 import { GraphNode } from 'app/models/GraphNode';
+import { SimulationData } from 'app/models/SimulationData';
 
 export interface GraphEdge {
   source: string;
@@ -19,6 +20,10 @@ export class GraphService {
   constructor(
     private _httpClient: HttpClient
   ) {}
+
+  public sendSimulationData(data: SimulationData): Observable<void> {
+    return this._httpClient.post<void>(`${environment.baseUrl}/ants/simulation`, data);
+  }
 
   public graphNodes(): Observable<GraphNode[]> {
     return this._httpClient.get<GraphNode[]>(`${environment.baseUrl}/graph`);

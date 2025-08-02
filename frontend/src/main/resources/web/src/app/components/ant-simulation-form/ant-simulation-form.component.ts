@@ -7,6 +7,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from "@angular/material/slider";
+import { GraphService } from 'app/services/graph.service';
+import { SimulationData } from 'app/models/SimulationData';
 
 
 @Component({
@@ -26,6 +28,7 @@ import { MatSliderModule } from "@angular/material/slider";
 export class AntSimulationFormComponent {
   
   private fb = inject(FormBuilder);
+  private _graphService = inject(GraphService);
 
   thumbLabel = true;
   
@@ -35,7 +38,12 @@ export class AntSimulationFormComponent {
 
   onSubmit(): void {
     if (this.antSimulationForm.valid) {
-      alert('Thanks!');
+      const simulationData = this.antSimulationForm.value as SimulationData;
+      this._graphService.sendSimulationData(simulationData).subscribe({
+        next: () => {
+          console.log("Dados enviados!");
+        }
+      });
     }
   }
 }
