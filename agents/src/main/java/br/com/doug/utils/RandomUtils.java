@@ -10,4 +10,8 @@ public class RandomUtils {
         return random.nextInt((max - min) + 1) + min;
     }
 
+    public static float randFloat(int min, int max) {
+        return random.nextFloat((max - min) + 1) + min;
+    }
+
 }

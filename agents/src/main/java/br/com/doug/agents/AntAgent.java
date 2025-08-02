@@ -28,7 +28,7 @@ import java.util.List;
 * */
 public class AntAgent extends Agent {
 
-    private static Logger LOG = LoggerFactory.getLogger(AntAgent.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AntAgent.class);
 
     @Serial
     private static final long serialVersionUID = 3818585241476465782L;
@@ -116,6 +116,11 @@ public class AntAgent extends Agent {
                                 .build());
 
                         step = 1;
+
+                        // Only remove the agent when the path found is complete (contains all nodes of the graph)
+                        if (graph.getNodes().size() == ant.getPathFound().size()) {
+                            doDelete();
+                        }
                 }
             } else {
                 block();

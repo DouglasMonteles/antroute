@@ -4,6 +4,7 @@ import br.com.doug.ant.impl.AntDensityAlgorithm;
 import br.com.doug.ants.AntSimulationDataDTO;
 import br.com.doug.graph.GraphNodeDTO;
 import br.com.doug.utils.ObjectConversorUtils;
+import br.com.doug.utils.RandomUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.Data;
 
@@ -66,10 +67,10 @@ public class Graph {
         }
     }
 
-    public static Graph buildGraphFromJsonFile() {
+    public static Graph buildGraph(String jsonName) {
         Graph graph = new Graph();
 
-        List<GraphNodeDTO> graphJson = ObjectConversorUtils.convertJsonInObject("graph.json", new TypeReference<>() {
+        List<GraphNodeDTO> graphJson = ObjectConversorUtils.convertJsonInObject(jsonName, new TypeReference<>() {
         });
 
         Map<String, Node> nodeMap = graphJson
@@ -87,15 +88,20 @@ public class Graph {
         return graph;
     }
 
-    public static Graph buildGraphFromObject(AntSimulationDataDTO antSimulationDataDTO) {
+    public static Graph buildGraph(AntSimulationDataDTO antSimulationDataDTO) {
         Graph graph = new Graph();
-
         List<Node> nodes = new ArrayList<>();
 
+        // Generate and insert node
         for (int i = 0; i < antSimulationDataDTO.getAntQuantity(); i++) {
-            nodes.add(new Node("Node" + (i+1), new Node.Position(10f, 10f)));
+            var x = RandomUtils.randFloat(10, 1000);
+            var y = RandomUtils.randFloat(10, 1000);
+            var node = new Node("N" + (i+1), new Node.Position(x, y));
+
+            nodes.add(node);
         }
 
+        // Every node is connected with the others
         for (int i = 0; i < nodes.size(); i++) {
             Node initialNode = nodes.get(i);
 

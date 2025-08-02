@@ -57,18 +57,19 @@ public class AntManagerAgent extends Agent implements AntObserver {
     @Override
     public void update(AntSimulationDataDTO antSimulationDataDTO) {
         LOG.info("Received simulation data: {}", antSimulationDataDTO);
-        this.graph = Graph.buildGraphFromObject(antSimulationDataDTO);
+
+        this.graph = Graph.buildGraph(antSimulationDataDTO);
         this.graph.getNodes().forEach(node -> ants.add(new Ant("Ant" + node.getName(), node)));
         this.antDensityAlgorithm = new AntDensityAlgorithm(graph, ants);
 
+        // trigger every time we receive a simulation data
         addBehaviour(new InitializeAntBehaviour());
-        addBehaviour(new AntResponseBehaviour());
     }
 
     @Override
     protected void setup() {
 
-
+        addBehaviour(new AntResponseBehaviour());
     }
 
     private class InitializeAntBehaviour extends OneShotBehaviour {
