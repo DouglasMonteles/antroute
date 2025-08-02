@@ -1,11 +1,15 @@
 package br.com.doug.ants;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class NodeDTO implements Serializable {
 
     @Serial
@@ -16,6 +20,8 @@ public class NodeDTO implements Serializable {
     private Position position;
 
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Position implements Serializable {
 
         @Serial

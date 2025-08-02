@@ -65,6 +65,9 @@ export class AntGraph implements OnInit {
 
             const graphInitialNode = this.cy.getElementById(`${initialNode.name}`);
 
+            console.log("graphInitialNode")
+            console.log(graphInitialNode)
+
             const ant = this.cy.getElementById(`${label}`);
 
             if (ant.length <= 0) {

@@ -2,6 +2,7 @@ package br.com.doug.ant;
 
 import br.com.doug.ant.impl.AntDensityAlgorithm;
 import br.com.doug.ants.AntSimulationDataDTO;
+import br.com.doug.ants.NodeDTO;
 import br.com.doug.graph.GraphNodeDTO;
 import br.com.doug.utils.ObjectConversorUtils;
 import br.com.doug.utils.RandomUtils;
@@ -90,6 +91,7 @@ public class Graph {
 
     public static Graph buildGraph(AntSimulationDataDTO antSimulationDataDTO) {
         Graph graph = new Graph();
+        List<GraphNodeDTO> graphNodeList = new ArrayList<>();
         List<Node> nodes = new ArrayList<>();
 
         // Generate and insert node
@@ -104,12 +106,20 @@ public class Graph {
         // Every node is connected with the others
         for (int i = 0; i < nodes.size(); i++) {
             Node initialNode = nodes.get(i);
+            GraphNodeDTO graphNodeDTO = new GraphNodeDTO();
+
+            graphNodeDTO.setNode(new NodeDTO(initialNode.getName(), new NodeDTO.Position(initialNode.getPosition().getX(), initialNode.getPosition().getY())));
 
             for (int j = i + 1; j < nodes.size(); j++) {
                 Node edgeNode = nodes.get(j);
                 graph.addEdge(initialNode, edgeNode);
+                graphNodeDTO.getEdges().add(edgeNode.getName());
             }
+
+            graphNodeList.add(graphNodeDTO);
         }
+
+        ObjectConversorUtils.writeObjectInJsonFile("graph.json", graphNodeList);
 
         return graph;
     }
