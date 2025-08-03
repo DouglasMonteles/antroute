@@ -1,14 +1,17 @@
-package br.com.doug.ant;
+package br.com.doug.graph;
 
+import br.com.doug.ant.Ant;
+import br.com.doug.ant.AntAlgorithm;
 import br.com.doug.ant.impl.AntDensityAlgorithm;
 import br.com.doug.ants.AntSimulationDataDTO;
 import br.com.doug.ants.NodeDTO;
-import br.com.doug.graph.GraphNodeDTO;
 import br.com.doug.utils.ObjectConversorUtils;
 import br.com.doug.utils.RandomUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -174,12 +177,14 @@ public class Graph {
     }
 
     public void updateShortestPath(List<Ant> ants) {
-        float shortestDistance = Float.MAX_VALUE;
+        float shortestDistance = this.shortestPathDistance == null ? Float.MAX_VALUE : this.shortestPathDistance;
 
         for (Ant ant : ants) {
             if (ant.getPathFoundLength(this) < shortestDistance && !ant.getPathFound().isEmpty()) {
                 this.shortestPath = ant.getPathFound();
-                this.shortestPathDistance = shortestDistance;
+                this.shortestPathDistance = new BigDecimal(Float.toString(ant.getPathFoundLength(this)))
+                        .setScale(2, RoundingMode.HALF_EVEN)
+                        .floatValue();
             }
         }
     }

@@ -1,4 +1,4 @@
-package br.com.doug.ant;
+package br.com.doug.graph;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
