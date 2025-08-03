@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { AntInfo } from 'app/models/AntInfo';
 import { Node } from 'app/models/GraphNode';
 import { GraphEdge, GraphService } from 'app/services/graph.service';
@@ -11,7 +12,9 @@ import { Message } from 'stompjs';
 
 @Component({
   selector: 'app-ant-graph',
-  imports: [],
+  imports: [
+    MatCardModule,
+  ],
   templateUrl: './ant-graph.html',
   styleUrl: './ant-graph.css'
 })
