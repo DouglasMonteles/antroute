@@ -4,13 +4,16 @@ import br.com.doug.agents.builders.AgentMessageBuilder;
 import br.com.doug.agents.utils.AgentUtils;
 import br.com.doug.agents.utils.Performative;
 import br.com.doug.ant.Ant;
-import br.com.doug.ant.Graph;
-import br.com.doug.ant.Node;
 import br.com.doug.ant.impl.AntDensityAlgorithm;
 import br.com.doug.ants.AntObserverService;
-import br.com.doug.ants.observer.AntObserver;
 import br.com.doug.ants.AntSimulationDataDTO;
+import br.com.doug.ants.NodeDTO;
+import br.com.doug.ants.observer.AntObserver;
 import br.com.doug.exceptions.AgentException;
+import br.com.doug.graph.Graph;
+import br.com.doug.graph.GraphResultDTO;
+import br.com.doug.graph.Node;
+import br.com.doug.http.HttpClient;
 import br.com.doug.services.JadeContainerService;
 import br.com.doug.services.impl.JadeContainerServiceImpl;
 import br.com.doug.utils.ThreadUtils;
@@ -23,7 +26,6 @@ import jade.wrapper.StaleProxyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -183,6 +185,12 @@ public class AntManagerAgent extends Agent implements AntObserver {
                         LOG.info(graph.getShortestPath().toString());
                         LOG.info("Shortest distance found:");
                         LOG.info(String.valueOf(graph.getShortestPathDistance()));
+
+                        LOG.info("Send result to api.");
+                        HttpClient.post("http://localhost:8080/api/graph/result", new GraphResultDTO(
+                                graph.getShortestPath().stream().map(it -> new NodeDTO(it.getName(), new NodeDTO.Position(it.getPosition().getX(), it.getPosition().getY()))).toList(),
+                                graph.getShortestPathDistance()
+                        ));
 
 //                        graph.getNodes().clear();
 //                        graph.getEdges().clear();

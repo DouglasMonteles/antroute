@@ -1,19 +1,23 @@
-import { Component, EventEmitter, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { AntInfo } from 'app/models/AntInfo';
 import { Node } from 'app/models/GraphNode';
+import { GraphResult } from 'app/models/GraphResult';
 import { GraphEdge, GraphService } from 'app/services/graph.service';
 import { WebSocketService } from 'app/services/web-socket.service';
 import { randHexColor } from 'app/utils/RandomUtils';
 import cytoscape from 'cytoscape';
 import { environment } from 'environments/environment.development';
-import { concatMap, Subject, timer } from 'rxjs';
 import { Message } from 'stompjs';
+import { GraphResultPipe } from './graph-result-pipe';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-ant-graph',
   imports: [
     MatCardModule,
+    GraphResultPipe,
+    DecimalPipe,
   ],
   templateUrl: './ant-graph.html',
   styleUrl: './ant-graph.css'
@@ -23,6 +27,11 @@ export class AntGraph implements OnInit {
   private ANT_MOVE_DURATION: number = 15000;
 
   private cy: cytoscape.Core | null = null;
+
+  result: GraphResult = {
+    shortestPath: [],
+    shortestDistance: 0
+  };
 
   constructor(
     private _graphService: GraphService,
@@ -96,6 +105,17 @@ export class AntGraph implements OnInit {
               this._moveAnt(ant, pathFound);
             }
 
+          },
+        }, (error) => {
+          console.log("Web socket error:");
+          console.log(error);
+        });
+
+        this._wsService.handleConnection(url, headers, {
+          destination: "/topic/graph/result",
+          callback: (message: Message) => {
+            const body: GraphResult = JSON.parse(message.body) as GraphResult;
+            this.result = body;
           },
         }, (error) => {
           console.log("Web socket error:");

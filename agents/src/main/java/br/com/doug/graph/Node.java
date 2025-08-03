@@ -30,6 +30,7 @@ public class Node implements Serializable {
 
         private Float x;
         private Float y;
+
     }
 
 }

@@ -1,5 +1,7 @@
 package br.com.doug.ant;
 
+import br.com.doug.graph.Graph;
+import br.com.doug.graph.Node;
 import org.junit.Assert;
 import org.junit.Test;
 

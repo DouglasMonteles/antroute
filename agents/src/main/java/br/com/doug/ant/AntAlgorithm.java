@@ -1,5 +1,7 @@
 package br.com.doug.ant;
 
+import br.com.doug.graph.Node;
+
 import java.util.List;
 
 public interface AntAlgorithm {

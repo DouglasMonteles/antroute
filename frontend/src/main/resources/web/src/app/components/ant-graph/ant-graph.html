@@ -1,26 +1,30 @@
-<div 
-  id="cy"
-  style="height: 80%;"
-></div>
+<div id="cy" class="mx-auto max-w-1/2" style="height: 80%;"></div>
 
-<mat-card>
+<mat-card class="max-w-1/3 mx-auto">
   <mat-card-header class="mx-auto">
-      <mat-card-title>
-        Resultado
-      </mat-card-title>
-    </mat-card-header>
+    <mat-card-title>
+      Resultado
+    </mat-card-title>
+  </mat-card-header>
 
-    <br />
+  <br />
 
-    <mat-card-content>
+  <mat-card-content>
+    <div class="row text-center">
+      <div class="col">Melhor caminho: </div>
+      <div class="col">Distância: </div>
+    </div>
+
+    @if (result.shortestPath.length) {
       <div class="row text-center">
-        <div class="col">Melhor caminho: </div>
-        <div class="col">Distância: </div>
+        <div class="col">{{result.shortestPath | graphResult}}</div>
+        <div class="col">{{result.shortestDistance | number: "1.2-2"}}</div>
       </div>
-
+    } @else {
       <div class="row text-center">
-        <div class="col">A -> B -> C</div>
-        <div class="col">123.78</div>
+        <div class="col">Aguarde a simulação finalizar...</div>
+        <div class="col">Aguarde a simulação finalizar...</div>
       </div>
-    </mat-card-content>
+    }
+  </mat-card-content>
 </mat-card>

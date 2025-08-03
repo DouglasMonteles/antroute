@@ -1,6 +1,9 @@
 package br.com.doug.ant;
 
 import br.com.doug.ant.impl.AntDensityAlgorithm;
+import br.com.doug.graph.Edge;
+import br.com.doug.graph.Graph;
+import br.com.doug.graph.Node;
 import br.com.doug.utils.RandomUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

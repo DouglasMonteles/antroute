@@ -2,8 +2,8 @@ package br.com.doug.ant.impl;
 
 import br.com.doug.ant.Ant;
 import br.com.doug.ant.AntAlgorithm;
-import br.com.doug.ant.Graph;
-import br.com.doug.ant.Node;
+import br.com.doug.graph.Graph;
+import br.com.doug.graph.Node;
 import lombok.Data;
 
 import java.util.List;
