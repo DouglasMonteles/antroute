@@ -13,6 +13,7 @@ import br.com.doug.ants.AntSimulationDataDTO;
 import br.com.doug.exceptions.AgentException;
 import br.com.doug.services.JadeContainerService;
 import br.com.doug.services.impl.JadeContainerServiceImpl;
+import br.com.doug.utils.ThreadUtils;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
@@ -83,6 +84,9 @@ public class AntManagerAgent extends Agent implements AntObserver {
 
         @Override
         public void action() {
+            // Wait frontend web subscribe on topic
+            ThreadUtils.sleep(1000);
+
             for (Node node : graph.getNodes()) {
                 var antLabel = "Ant" + node.getName();
                 var antContainer = jadeContainerService.createAgent(antLabel, AntAgent.class.getName(), new Object[]{
