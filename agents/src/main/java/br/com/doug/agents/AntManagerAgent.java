@@ -137,12 +137,7 @@ public class AntManagerAgent extends Agent implements AntObserver {
 
             if (antReply != null) {
                 Ant antObj = AgentUtils.getContentObject(antReply, Ant.class);
-                LOG.info("Received: {} - {}", antReply.getSender().getLocalName(), antObj.getTabuList());
-
-//                send(new AgentMessageBuilder(Performative.HTTP_CLIENT_ANT_REQUEST)
-//                        .setReceiver(getAID("http"))
-//                        .setContentObject(antObj)
-//                        .build());
+                LOG.info("Received from {} the path {} with size {}", antReply.getSender().getLocalName(), antObj.getTabuList().stream().map(Node::getName).toList(), antObj.getTabuList().size());
 
                 if (antObj.getTabuList().size() == graph.getNodes().size())
                     ants.add(antObj);

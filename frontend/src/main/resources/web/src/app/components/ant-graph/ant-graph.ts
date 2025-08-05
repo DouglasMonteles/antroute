@@ -11,7 +11,8 @@ import { environment } from 'environments/environment.development';
 import { Message } from 'stompjs';
 import { GraphResultPipe } from './graph-result-pipe';
 import { DecimalPipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-ant-graph',
@@ -19,6 +20,8 @@ import { ActivatedRoute } from '@angular/router';
     MatCardModule,
     GraphResultPipe,
     DecimalPipe,
+    RouterModule,
+    MatButtonModule,
   ],
   templateUrl: './ant-graph.html',
   styleUrl: './ant-graph.css'
