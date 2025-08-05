@@ -11,6 +11,7 @@ import { environment } from 'environments/environment.development';
 import { Message } from 'stompjs';
 import { GraphResultPipe } from './graph-result-pipe';
 import { DecimalPipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-ant-graph',
@@ -24,7 +25,7 @@ import { DecimalPipe } from '@angular/common';
 })
 export class AntGraph implements OnInit {
 
-  private ANT_MOVE_DURATION: number = 15000;
+  private ONE_SECOND_MILLISECONDS: number = 1000;
 
   private cy: cytoscape.Core | null = null;
 
@@ -36,9 +37,12 @@ export class AntGraph implements OnInit {
   constructor(
     private _graphService: GraphService,
     private _wsService: WebSocketService,
+    private _route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
+    const antSpeed = this._route.snapshot.queryParams["antSpeed"];
+
     const container = document.getElementById("cy");
     const nodes: string[] = [];
     const edges: GraphEdge[] = [];
@@ -100,9 +104,9 @@ export class AntGraph implements OnInit {
                 }
               });
 
-              this._moveAnt(antNode, pathFound);
+              this._moveAnt(antNode, pathFound, antSpeed);
             } else {
-              this._moveAnt(ant, pathFound);
+              this._moveAnt(ant, pathFound, antSpeed);
             }
 
           },
@@ -125,7 +129,7 @@ export class AntGraph implements OnInit {
     });
   }
 
-  private _moveAnt(antNode: cytoscape.CollectionReturnValue, path: Node[]): void {
+  private _moveAnt(antNode: cytoscape.CollectionReturnValue, path: Node[], antSpeed: number): void {
     path.forEach((node, index) => {
       const targetNode = this.cy?.getElementById(`${node.name}`);
 
@@ -137,7 +141,7 @@ export class AntGraph implements OnInit {
             y: targetNode.position().y,
           },
           // In the fist node path, ant already starts in a node position, don't need to wait for 15s
-          duration: index == 0 ? 0 : this.ANT_MOVE_DURATION,
+          duration: index == 0 ? 0 : this.ONE_SECOND_MILLISECONDS * antSpeed,
           easing: "linear",
         });
 

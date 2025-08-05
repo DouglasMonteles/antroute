@@ -22,11 +22,33 @@
 
             <mat-slider 
               class="full-width"
-              [max]="100" 
-              [min]="1" 
+              [min]="3" 
+              [max]="30" 
               [discrete]="thumbLabel" 
             >
               <input matSliderThumb formControlName="antQuantity">
+            </mat-slider>
+          </div>
+      </div>
+
+      <div class="row">
+          <div class="col">
+            <div>
+              <label>
+                Velocidade das Formigas:
+              </label>
+              <label>
+                {{antSimulationForm.controls['antSpeed'].value}} seg
+              </label>
+            </div>
+
+            <mat-slider 
+              class="full-width"
+              [min]="3" 
+              [max]="30"
+              [discrete]="thumbLabel" 
+            >
+              <input matSliderThumb formControlName="antSpeed">
             </mat-slider>
           </div>
       </div>

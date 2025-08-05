@@ -35,7 +35,8 @@ export class AntSimulationFormComponent {
   thumbLabel = true;
   
   antSimulationForm = this.fb.group({
-    antQuantity: [1, [Validators.required, Validators.min(1), Validators.max(100)]]
+    antQuantity: [3, [Validators.required, Validators.min(3), Validators.max(30)]],
+    antSpeed: [15, [Validators.required, Validators.min(3), Validators.max(30)]],
   });
 
   onSubmit(): void {
@@ -43,7 +44,9 @@ export class AntSimulationFormComponent {
       const simulationData = this.antSimulationForm.value as SimulationData;
       this._graphService.sendSimulationData(simulationData).subscribe({
         next: () => {
-          this._router.navigateByUrl("/simulation");
+          this._router.navigate(["/simulation"], {queryParams: {
+            antSpeed: this.antSimulationForm.controls.antSpeed.value
+          }});
         }
       });
     }
