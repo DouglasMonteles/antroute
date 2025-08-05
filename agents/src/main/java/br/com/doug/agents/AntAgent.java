@@ -78,7 +78,8 @@ public class AntAgent extends Agent {
                     return;
 
                 // Only move ants that are in the actual node
-                if (ant == null || ant.getActualNode() == null || !ant.getActualNode().equals(actualNode))
+                // if (ant == null || ant.getActualNode() == null || !ant.getActualNode().equals(actualNode))
+                if (ant == null || ant.getActualNode() == null)
                     return;
 
                 switch (step) {
@@ -109,7 +110,7 @@ public class AntAgent extends Agent {
                         // Update path found
                         ant.getPathFound().add(nextNode);
 
-                        LOG.info("Send: {} - {}", getAgent().getLocalName(), ant.getTabuList());
+                        // LOG.info("Send: {} - {}", getAgent().getLocalName(), ant.getTabuList());
                         send(new AgentMessageBuilder(request.createReply())
                                 .setPerformative(Performative.ANT_RESPONSE_OK)
                                 .setContentObject(ant)
