@@ -32,6 +32,8 @@ export class AntGraph implements OnInit {
 
   private cy: cytoscape.Core | null = null;
 
+  private _edgeMap = new Map();
+
   result: GraphResult = {
     shortestPath: [],
     shortestDistance: 0
@@ -146,6 +148,52 @@ export class AntGraph implements OnInit {
           // In the fist node path, ant already starts in a node position, don't need to wait for 15s
           duration: index == 0 ? 0 : this.ONE_SECOND_MILLISECONDS * antSpeed,
           easing: "linear",
+          complete: () => {
+            if (index > 0) {
+              const edgeId1 = `${path[index-1].name}${path[index].name}`;
+              const edgeId2 = `${path[index].name}${path[index-1].name}`;
+              const edge1 = this.cy?.getElementById(edgeId1);
+              const edge2 = this.cy?.getElementById(edgeId2);
+
+              // if (edge && edge != undefined)
+              //   console.log(`Ant: ${antNode.id()} | Edge: ${edge.id()}`);
+
+              if ((edge1 || edge2) && (edge1 != undefined || edge2 != undefined)) {
+                const edgeValue1 = this._edgeMap.get(edgeId1);
+                const edgeValue2 = this._edgeMap.get(edgeId1);
+
+                if (edgeValue1 != undefined || edgeValue2 != undefined) {
+                  this._edgeMap.delete(edgeId1);
+                  this._edgeMap.delete(edgeId2);
+                  this._edgeMap.set(edgeId1, edgeValue1+1);
+                  this._edgeMap.set(edgeId2, edgeValue2+1);
+                } else {
+                  this._edgeMap.set(edgeId1, 1);
+                  this._edgeMap.set(edgeId2, 1);
+                }
+                
+                if (edge1) {
+                  const opacity = ((100 * this._edgeMap.get(edgeId1)) / path.length) * 0.01;
+                  
+                  edge1.style({
+                    label: this._edgeMap.get(edgeId1),
+                    "z-index": 2,
+                    opacity,
+                  });
+                }
+
+                if (edge2) {
+                  const opacity = ((100 * this._edgeMap.get(edgeId1)) / path.length) * 0.01;
+                  
+                  edge2.style({
+                    label: this._edgeMap.get(edgeId2),
+                    "z-index": 2,
+                    opacity,
+                  });
+                }
+              }
+            }
+          }
         });
 
         // Update the position of ant at each target node from the path founded.

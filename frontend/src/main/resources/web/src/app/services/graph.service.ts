@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import cytoscape from 'cytoscape'; 
+import cytoscape from 'cytoscape';
 import { randNumber } from "app/utils/RandomUtils";
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -19,7 +19,7 @@ export class GraphService {
 
   constructor(
     private _httpClient: HttpClient
-  ) {}
+  ) { }
 
   public sendSimulationData(data: SimulationData): Observable<void> {
     return this._httpClient.post<void>(`${environment.baseUrl}/ants/simulation`, data);
@@ -28,7 +28,7 @@ export class GraphService {
   public graphNodes(): Observable<GraphNode[]> {
     return this._httpClient.get<GraphNode[]>(`${environment.baseUrl}/graph`);
   }
-  
+
   public generateGraph(container: HTMLElement | null, nodes: string[], connections: GraphEdge[]): cytoscape.Core {
     return cytoscape({
       container: container,
@@ -46,15 +46,15 @@ export class GraphService {
         {
           selector: 'edge',
           style: {
-            'width': 6,
+            'width': 2,
             'line-color': '#ccc',
             'target-arrow-color': '#ccc',
             'target-arrow-shape': 'triangle'
-          }
+          },
         }
       ],
 
-      layout: { 
+      layout: {
         name: 'preset',
         fit: true,
       },
@@ -68,7 +68,7 @@ export class GraphService {
           id: `${node}`,
         },
         position: {
-          x: randNumber(), 
+          x: randNumber(),
           y: randNumber(),
         },
         group: "nodes",
@@ -82,7 +82,7 @@ export class GraphService {
 
     const graphEdges: cytoscape.EdgeDefinition[] = connections.map(edge => {
       const { source, target } = edge;
-      
+
       const edgeDef: cytoscape.EdgeDefinition = {
         data: {
           id: `${source}${target}`,
@@ -90,6 +90,37 @@ export class GraphService {
           target,
         },
         group: "edges",
+        style: {
+          "font-size": "8pt"
+        },
+      };
+
+      return edgeDef;
+    });
+
+    const graphEdgesInverse: cytoscape.EdgeDefinition[] = connections.map(edge => {
+      const { source, target } = edge;
+
+      const edgeDef: cytoscape.EdgeDefinition = {
+        data: {
+          id: `${target}${source}`,
+          source,
+          target,
+        },
+        group: "edges",
+        style: {
+          "font-size": "8pt",
+          'width': 3,
+          'line-color': 'gray',
+          'curve-style': 'bezier',
+          'opacity': 0.1,
+
+          'source-arrow-shape': 'triangle',
+          'source-arrow-color': 'gray',
+
+          'target-arrow-shape': 'triangle',
+          'target-arrow-color': 'gray',
+        },
       };
 
       return edgeDef;
@@ -99,7 +130,8 @@ export class GraphService {
       // Node list
       ...graphNodes,
       // Node connections
-      ...graphEdges
+      ...graphEdges,
+      ...graphEdgesInverse,
     ];
   }
 

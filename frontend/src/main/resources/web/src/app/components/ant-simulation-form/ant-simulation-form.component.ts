@@ -36,7 +36,7 @@ export class AntSimulationFormComponent {
   
   antSimulationForm = this.fb.group({
     antQuantity: [3, [Validators.required, Validators.min(3), Validators.max(30)]],
-    antSpeed: [15, [Validators.required, Validators.min(3), Validators.max(30)]],
+    antSpeed: [3, [Validators.required, Validators.min(3), Validators.max(30)]],
   });
 
   onSubmit(): void {
