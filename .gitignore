@@ -39,3 +39,6 @@ build/
 /frontend/src/main/resources/web/.angular
 /frontend/src/main/resources/web/.vscode
 
+### External Files ###
+external-data/graph.json
+APDescription.txt
