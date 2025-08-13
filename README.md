@@ -34,7 +34,9 @@
 
 Neste projeto, foi implementado um sistema de simulação em tempo real que exibe as formigas percorrendo um grafo e marcando o melhor caminho com feromônio. Além do algoritmo ACO, cada formiga é um agente criado com Java Agent DEvelopment framework (JADE). Para viabilizar a comunicação entre a interface web e os agentes, foi adicionada uma API criada com Springboot.
 
-![Demo do Projeto](docs/demo.gif)
+### Apresentação da interface web
+
+<video width="100%" src="https://github.com/user-attachments/assets/22f3e52b-3bab-4d7e-ba6a-49c7e61af4bc"></video>
 
 ---
 
